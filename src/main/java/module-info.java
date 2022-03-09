@@ -10,6 +10,6 @@ module com.example.wordo {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
 
-    opens com.example.wordo to javafx.fxml;
-    exports com.example.wordo;
+    opens com.wordo to javafx.fxml;
+    exports com.wordo;
 }
