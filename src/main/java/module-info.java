@@ -12,4 +12,6 @@ module com.example.wordo {
 
     opens com.wordo to javafx.fxml;
     exports com.wordo;
+    exports com.wordo.ui;
+    opens com.wordo.ui to javafx.fxml;
 }
