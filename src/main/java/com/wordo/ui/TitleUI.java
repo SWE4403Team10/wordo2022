@@ -24,7 +24,6 @@ public class TitleUI extends Application {
         grid.setGridLinesVisible(true);
 
         sharedmethods.createRowsColumnsForGridPane(grid, 9, 7);
-//        grid.getColumnConstraints().get(0).setMinWidth(30);
         grid.getColumnConstraints().get(0).setMaxWidth(25);
         grid.getColumnConstraints().get(6).setMaxWidth(25);
 

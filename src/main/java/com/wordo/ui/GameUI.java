@@ -1,5 +1,6 @@
 package com.wordo.ui;
 
+import com.wordo.ui.components.Table;
 import com.wordo.ui.layout.SharedMethods;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -19,6 +20,14 @@ public class GameUI extends Application {
         gameStage = primaryStage;
         sharedMethods.createRowsColumnsForGridPane(grid, 9, 7);
 
+        grid.setGridLinesVisible(true);
+        grid.getColumnConstraints().get(0).setMaxWidth(70);
+        grid.getColumnConstraints().get(6).setMaxWidth(70);
+        grid.getColumnConstraints().get(0).setMinWidth(70);
+        grid.getColumnConstraints().get(6).setMinWidth(70);
+        grid.getRowConstraints().get(8).setMinHeight(30);
+
+
         Button btnExitGame = new Button("Exit Game");
         btnExitGame.setMaxSize(75, 25);
         btnExitGame.setOnAction(e -> {
@@ -29,6 +38,13 @@ public class GameUI extends Application {
         HBox hboxExit = new HBox(btnExitGame);
         hboxExit.setMaxSize(100, 75);
         grid.add(hboxExit, 0, 0);
+
+        //Table
+        Table table = new Table();
+        table.createColumns(5);
+        table.addData();
+
+        grid.add(table.getTable(), 1, 3, 5, 1);
 
         Scene gameScene = new Scene(grid, 500, 400);
 
