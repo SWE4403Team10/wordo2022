@@ -1,5 +1,5 @@
 .settings-button {
-    -fx-background-image: url("/resources/com.wordo/styles/settings.png");
+    -fx-background-image: url("/resources/com/wordo/styles/settings.png");
     -fx-background-size: 25px;
     -fx-background-repeat: no-repeat;
     -fx-background-color: transparent;

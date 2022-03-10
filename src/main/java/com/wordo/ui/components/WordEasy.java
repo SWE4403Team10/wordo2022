@@ -7,7 +7,7 @@ public class WordEasy {
         return word;
     }
 
-    public void setLetter(String value) {
+    public void setWord(String value) {
         word = value;
     }
 

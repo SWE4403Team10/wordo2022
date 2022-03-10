@@ -14,22 +14,23 @@ public class GameUI extends Application {
     private Stage gameStage = new Stage();
     private final GridPane grid = new GridPane();
     private final SharedMethods sharedMethods = new SharedMethods();
+    private int diff = 0;
 
     @Override
     public void start(Stage primaryStage) {
         gameStage = primaryStage;
         sharedMethods.createRowsColumnsForGridPane(grid, 9, 7);
 
-        grid.setGridLinesVisible(true);
+//        grid.setGridLinesVisible(true);
         grid.getColumnConstraints().get(0).setMaxWidth(70);
         grid.getColumnConstraints().get(6).setMaxWidth(70);
         grid.getColumnConstraints().get(0).setMinWidth(70);
         grid.getColumnConstraints().get(6).setMinWidth(70);
         grid.getRowConstraints().get(8).setMinHeight(30);
 
-
         Button btnExitGame = new Button("Exit Game");
         btnExitGame.setMaxSize(75, 25);
+        btnExitGame.setStyle("-fx-background-color: transparent; -fx-background-size: 50px; -fx-background-repeat: no-repeat; -fx-border-color: transparent;");
         btnExitGame.setOnAction(e -> {
             TitleUI title = new TitleUI();
             title.start(gameStage);
@@ -40,17 +41,21 @@ public class GameUI extends Application {
         grid.add(hboxExit, 0, 0);
 
         //Table
-        Table table = new Table();
-        table.createColumns(5);
+        Table table = new Table(diff);
+        table.createColumns();
         table.addData();
+        table.setNumberOfVisibleCells(50);
 
         grid.add(table.getTable(), 1, 3, 5, 1);
 
         Scene gameScene = new Scene(grid, 500, 400);
-
         gameStage.setScene(gameScene);
         gameStage.show();
 
+    }
+
+    public void setDiff(int numDiff){
+        diff = numDiff;
     }
 
     public static void main(String[] args) {
