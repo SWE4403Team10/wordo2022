@@ -15,7 +15,7 @@ public class TitleUI extends Application {
     private Stage titleStage;
     private GridPane grid = new GridPane();
     private SharedMethods sharedmethods = new SharedMethods();
-    private int difficulty = 5;
+    private int difficulty = 4;
 
     @Override
     public void start(Stage stage) {
@@ -70,13 +70,13 @@ public class TitleUI extends Application {
         RadioButton rbEasy = new RadioButton("Easy");
         rbEasy.setToggleGroup(tGroup);
         rbEasy.setSelected(true);
-        rbEasy.setOnAction(e -> { difficulty = 5; });
+        rbEasy.setOnAction(e -> { difficulty = 4; });
         RadioButton rbMedium = new RadioButton("Medium");
         rbMedium.setToggleGroup(tGroup);
-        rbMedium.setOnAction(e -> { difficulty = 6; });
+        rbMedium.setOnAction(e -> { difficulty = 5; });
         RadioButton rbHard = new RadioButton("Hard");
         rbHard.setToggleGroup(tGroup);
-        rbHard.setOnAction(e -> { difficulty = 7; });
+        rbHard.setOnAction(e -> { difficulty = 6; });
 
         HBox hboxDifficulties = new HBox(rbEasy, rbMedium, rbHard);
         hboxDifficulties.setAlignment(Pos.CENTER);
@@ -85,7 +85,6 @@ public class TitleUI extends Application {
         grid.add(hboxDifficulties, 2, 7, 3, 1);
 
         Scene titleScene = new Scene(grid, 450, 375);
-//        titleScene.getStylesheets().add("/resources/styles/mainPage.css");
 
         titleStage.setTitle("Wordo");
         titleStage.setScene(titleScene);

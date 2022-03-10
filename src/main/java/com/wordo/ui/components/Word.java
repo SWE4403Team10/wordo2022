@@ -1,6 +1,6 @@
 package com.wordo.ui.components;
 
-public class WordEasy {
+public class Word {
     private String word;
 
     public String getWord(){

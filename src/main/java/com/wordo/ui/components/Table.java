@@ -19,9 +19,9 @@ import java.util.Arrays;
 
 public class Table {
 
-    private final TableView<WordEasy> tv;
+    private final TableView<Word> tv;
     private int numOfColumns;
-    private final ObservableList<WordEasy> data = FXCollections.observableArrayList();
+    private final ObservableList<Word> data = FXCollections.observableArrayList();
     private static String[] letters;
     private int guessNumber = 0;
 
@@ -52,7 +52,7 @@ public class Table {
 
     public void addData() {
         for (int i = 0; i < 6; i++) {
-            WordEasy word = new WordEasy();
+            Word word = new Word();
             data.add(word);
         }
         tv.setItems(data);
@@ -77,12 +77,12 @@ public class Table {
     }
 
     public void createColumnsCallbacks(boolean lastColumn) {
-        TableColumn<WordEasy, Void> column = new TableColumn<>();
-        Callback<TableColumn<WordEasy, Void>, TableCell<WordEasy, Void>> factory = new Callback<>() {
+        TableColumn<Word, Void> column = new TableColumn<>();
+        Callback<TableColumn<Word, Void>, TableCell<Word, Void>> factory = new Callback<>() {
 
             @Override
-            public TableCell<WordEasy, Void> call(TableColumn<WordEasy, Void> param) {
-                return new TableCell<WordEasy, Void>() {
+            public TableCell<Word, Void> call(TableColumn<Word, Void> param) {
+                return new TableCell<Word, Void>() {
 
                     private int columnIndex = param.getTableView().getColumns().indexOf(param);
                     private TextField inputTF = new TextField();
@@ -100,7 +100,6 @@ public class Table {
                         inputTF.textProperty().addListener((obs, s, t) -> {
                             if(s.length() == 0) {
                                 letters[columnIndex] = t;
-//                                System.out.println(getGuess());
                                 Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
                             }
                         });
@@ -114,7 +113,6 @@ public class Table {
                             if(i == 1 && columnIndex == 0){
 //                                this.setStyle(ColorStyle.green);
                             }
-                            // select color repeating the color, if we run out of colors
                         }
                     }
 
