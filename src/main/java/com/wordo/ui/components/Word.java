@@ -1,13 +1,13 @@
 package com.wordo.ui.components;
 
-public class WordEasy {
+public class Word {
     private String word;
 
     public String getWord(){
         return word;
     }
 
-    public void setLetter(String value) {
+    public void setWord(String value) {
         word = value;
     }
 

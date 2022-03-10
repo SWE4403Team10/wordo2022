@@ -1,68 +1,59 @@
 package com.wordo.ui.components;
 
+import com.wordo.ui.ColorStyle;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
-import org.w3c.dom.Text;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.robot.Robot;
+import javafx.util.Callback;
+import org.controlsfx.control.PropertySheet;
+
+import java.util.Arrays;
 
 public class Table {
 
-    private final TableView<WordEasy> tv;
+    private final TableView<Word> tv;
     private int numOfColumns;
-    private final ObservableList<WordEasy> data = FXCollections.observableArrayList();
-    private final String[] letters = new String[5];
+    private final ObservableList<Word> data = FXCollections.observableArrayList();
+    private static String[] letters;
     private int guessNumber = 0;
 
-    public Table() {
+    public Table(int diff) {
         tv = new TableView<>();
+        letters = new String[diff];
+        numOfColumns = diff;
+        tv.skinProperty().addListener((a, b, newSkin) -> {
+            Pane header = (Pane) tv.lookup("TableHeaderRow");
+            header.setMinHeight(0);
+            header.setPrefHeight(0);
+            header.setMaxHeight(0);
+            header.setVisible(false);
+        });
         tv.setEditable(true);
+        Arrays.fill(letters, "");
+        guessNumber = 0;
     }
 
-    public void createColumns(int numOfColumns){
-        this.numOfColumns = numOfColumns;
-
-        for(int i = 0; i < numOfColumns-1; i++) {
-            TableColumn<WordEasy, String> column = new TableColumn<>();
-
-            column.setCellFactory(TextFieldTableCell.forTableColumn());
-            int letterIndex = i;
-            column.setOnEditCommit(e -> {
-                String letter = e.getNewValue();
-                letters[letterIndex] = letter;
-                if(letter.length() == 1) {
-                    Platform.runLater(() -> tv.edit(guessNumber, tv.getColumns().get(letterIndex+1)));
-                } else {
-                    Platform.runLater(() -> tv.edit(guessNumber, column));
-                }
-            });
-            tv.getColumns().add(column);
+    public void createColumns() {
+        for (int i = 0; i < numOfColumns - 1; i++) {
+            createColumnsCallbacks(false);
         }
 
-        TableColumn<WordEasy, String> column5 = new TableColumn<>();
-        column5.setCellFactory(TextFieldTableCell.forTableColumn());
-        column5.setOnEditCommit(e -> {
-            String letter = e.getNewValue();
-            letters[letters.length-1] = letter;
-            guessNumber++;
-            Platform.runLater(() -> tv.edit(guessNumber, tv.getColumns().get(0)));
-            for (String s : letters) {
-                System.out.print(s);
-            }
-
-        });
-        tv.getColumns().add(column5);
-
+        createColumnsCallbacks(true);
         tv.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     public void addData() {
-        for(int i = 0; i < numOfColumns; i++){
-            WordEasy letterInWord = new WordEasy();
-            data.add(letterInWord);
+        for (int i = 0; i < 6; i++) {
+            Word word = new Word();
+            data.add(word);
         }
         tv.setItems(data);
 
@@ -72,14 +63,81 @@ public class Table {
         return tv;
     }
 
-    public String[] getGuess() {
-        return letters;
+    public static String getGuess() {
+        String temp = "";
+        for (String s : letters) {
+            temp += s;
+        }
+        return temp;
     }
 
-    public void changeColour() {
-
+    public void setNumberOfVisibleCells(int i) {
+        tv.setFixedCellSize(i);
+        tv.prefHeightProperty().bind(Bindings.size(tv.getItems()).multiply(tv.getFixedCellSize()).add(0));
     }
 
+    public void createColumnsCallbacks(boolean lastColumn) {
+        TableColumn<Word, Void> column = new TableColumn<>();
+        Callback<TableColumn<Word, Void>, TableCell<Word, Void>> factory = new Callback<>() {
 
+            @Override
+            public TableCell<Word, Void> call(TableColumn<Word, Void> param) {
+                return new TableCell<Word, Void>() {
+
+                    private int columnIndex = param.getTableView().getColumns().indexOf(param);
+                    private TextField inputTF = new TextField();
+
+                    {
+                        inputTF.setAlignment(Pos.CENTER);
+                        inputTF.setMaxHeight(25);
+                        inputTF.setMinHeight(25);
+                        inputTF.setMaxWidth(25);
+                        inputTF.setMinWidth(25);
+                        inputTF.setStyle("-fx-background-color: transparent;");
+
+
+                        Robot robot = new Robot();
+                        inputTF.textProperty().addListener((obs, s, t) -> {
+                            if(s.length() == 0) {
+                                letters[columnIndex] = t;
+                                Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void updateIndex(int i) {
+                        super.updateIndex(i);
+                        // select color based on index of row/column
+                        if (i >= 0) {
+                            if(i == 1 && columnIndex == 0){
+//                                this.setStyle(ColorStyle.green);
+                            }
+                        }
+                    }
+
+                    @Override
+                    protected void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        // assign item's toString value as text
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(inputTF);
+                        }
+                    }
+
+                };
+            }
+
+        };
+        column.setStyle("-fx-alignment: CENTER");
+        column.setCellFactory(factory);
+        column.setSortable(false);
+        tv.getColumns().add(column);
+
+    }
 }
+
 

@@ -21,6 +21,7 @@ public class SettingsUI extends Application {
 
         Button btnBack = new Button("Back");
         btnBack.setMaxSize(50, 25);
+        btnBack.setStyle("-fx-background-color: transparent; -fx-background-size: 50px; -fx-background-repeat: no-repeat; -fx-border-color: transparent;");
         btnBack.setOnAction(e -> {
            TitleUI title = new TitleUI();
            title.start(settingStage);
