@@ -29,6 +29,7 @@ public class GameLogic {
         char[] guessArray = guess.toCharArray();
         boolean found = false;
 
+
         //check if guess meets word length difficulty requirements
         if(guess.length() == difficulty.getWordLength()){
 
@@ -63,7 +64,18 @@ public class GameLogic {
         else{
             return result;
         }
+        numGuesses++;
         return result;
+    }
+
+
+    // Gets the current number of guesses
+    public boolean getNumGuesses(){
+        if(numGuesses == 6){
+            numGuesses = 0;
+            return false;
+        }
+        return true;
     }
 
 
