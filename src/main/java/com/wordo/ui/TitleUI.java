@@ -84,7 +84,7 @@ public class TitleUI extends Application {
 
         grid.add(hboxDifficulties, 2, 7, 3, 1);
 
-        Scene titleScene = new Scene(grid, 450, 375);
+        Scene titleScene = new Scene(grid, 550, 700);
 
         titleStage.setTitle("Wordo");
         titleStage.setScene(titleScene);

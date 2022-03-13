@@ -31,7 +31,7 @@ public class SettingsUI extends Application {
         hboxBack.setMaxSize(100, 75);
         grid.add(hboxBack, 0, 0);
 
-        Scene settingScene = new Scene(grid, 450, 375);
+        Scene settingScene = new Scene(grid, 550, 700);
         settingStage.setScene(settingScene);
         settingStage.show();
     }

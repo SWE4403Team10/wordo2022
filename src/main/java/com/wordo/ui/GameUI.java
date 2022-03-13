@@ -1,13 +1,21 @@
 package com.wordo.ui;
 
+import com.wordo.ui.components.Keyboard;
 import com.wordo.ui.components.Table;
 import com.wordo.ui.layout.SharedMethods;
 import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
+
+import java.security.Key;
 
 public class GameUI extends Application {
 
@@ -48,7 +56,25 @@ public class GameUI extends Application {
 
         grid.add(table.getTable(), 1, 3, 5, 1);
 
-        Scene gameScene = new Scene(grid, 500, 400);
+        //Keyboard
+        Keyboard keyboard = new Keyboard();
+        grid.add(keyboard.getKeyboard(), 3, 7);
+
+        Scene gameScene = new Scene(grid, 550, 700);
+
+        //TODO replace with calls to controller class
+        gameScene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
+            if(key.getCode().isLetterKey()){
+                System.out.println(key.getCode());
+            }
+            else if(key.getCode() == KeyCode.ENTER){
+                System.out.println(key.getCode());
+            }
+            else if(key.getCode() == KeyCode.BACK_SPACE){
+                System.out.println(key.getCode());
+            }
+        });
+
         gameStage.setScene(gameScene);
         gameStage.show();
 
