@@ -75,6 +75,7 @@ public class Table {
         tv.setFixedCellSize(i);
         tv.prefHeightProperty().bind(Bindings.size(tv.getItems()).multiply(tv.getFixedCellSize()).add(0));
     }
+    private int currentRow;
 
     public void createColumnsCallbacks(boolean lastColumn) {
         TableColumn<Word, Void> column = new TableColumn<>();
@@ -85,6 +86,8 @@ public class Table {
                 return new TableCell<Word, Void>() {
 
                     private int columnIndex = param.getTableView().getColumns().indexOf(param);
+                    private int rowIndex;
+                    private TextField selectedTextField = null;
                     private TextField inputTF = new TextField();
 
                     {
@@ -98,9 +101,33 @@ public class Table {
 
                         Robot robot = new Robot();
                         inputTF.textProperty().addListener((obs, s, t) -> {
-                            if(s.length() == 0) {
+                            if(t.length() == 1) {
                                 letters[columnIndex] = t;
-                                Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
+//                                if(columnIndex != numOfColumns-1){
+                                    Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
+//                                } else {
+//
+//                                }
+                            }
+                        });
+
+                        inputTF.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
+                            inputTF.setId(columnIndex + " " + rowIndex);
+                            selectedTextField = inputTF;
+                            if(t1){
+                                if(currentRow < (selectedTextField.getId().charAt(2) - '0')) {
+                                    System.out.println(currentRow);
+                                    System.out.println(selectedTextField.getId().charAt(2));
+                                    currentRow = selectedTextField.getId().charAt(2) - '0';
+                                }
+                                if(!inputTF.getText().equals("")){
+                                    if((selectedTextField.getId().charAt(2) - '0') < currentRow){
+                                        Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
+                                    }
+                                }
+                                System.out.println("Selected Row " + selectedTextField.getId().charAt(2));
+                                System.out.println("Selected Row & Column " + selectedTextField.getId());
+                                System.out.println("Curr Row Index " + currentRow);
                             }
                         });
                     }
@@ -108,12 +135,7 @@ public class Table {
                     @Override
                     public void updateIndex(int i) {
                         super.updateIndex(i);
-                        // select color based on index of row/column
-                        if (i >= 0) {
-                            if(i == 1 && columnIndex == 0){
-//                                this.setStyle(ColorStyle.green);
-                            }
-                        }
+                        rowIndex = i;
                     }
 
                     @Override
