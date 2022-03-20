@@ -1,5 +1,12 @@
 package com.wordo.gamelogic;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class GameLogic {
 
     private Difficulty difficulty;
@@ -81,6 +88,36 @@ public class GameLogic {
 
     // Selects a random word from the data file to use as the correct word
     public void generateCorrectWord(){
+        File file;
+        String fileToRead;
+        if(difficulty.getWordLength()==4){
+            file = new File("data/easy.txt");
+            fileToRead = file.getAbsolutePath();
+        } else if (difficulty.getWordLength()==6){
+            file = new File("data/hard.txt");
+            fileToRead = file.getAbsolutePath();
+        } else{
+            file = new File("data/normal.txt");
+            fileToRead = file.getAbsolutePath();
+        }
+        try{
+            BufferedReader reader = new BufferedReader(new FileReader(fileToRead));
+            String line = reader.readLine();
+            List<String> words = new ArrayList<String>();
+            while(line != null) {
+                String[] wordsLine = line.split(" ");
+                 for(String word : wordsLine) {
+                     words.add(word);
+                }
+                line = reader.readLine();
+            }
+            reader.close();
+            Random rand = new Random(System.currentTimeMillis());
+            correctWord = words.get(rand.nextInt(words.size()));
+            System.out.println(correctWord);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
 
