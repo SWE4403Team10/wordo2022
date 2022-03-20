@@ -10,7 +10,7 @@ import java.util.Random;
 public class GameLogic {
 
     private Difficulty difficulty;
-    private String correctWord = "hello";
+    private String correctWord = "";
     private int numGuesses = 0;
     private static final GameLogic instance = new GameLogic();
 
@@ -32,34 +32,31 @@ public class GameLogic {
     // Compares the user guess with the correct word
     public int[] checkGuess(String guess){
         int[] result = new int[difficulty.getWordLength()];
-        char[] correctWordCopy = correctWord.toCharArray();
+        char[] correctWordArray = correctWord.toCharArray();
         char[] guessArray = guess.toCharArray();
         boolean found = false;
-
 
         //check if guess meets word length difficulty requirements
         if(guess.length() == difficulty.getWordLength()){
 
-            for(int i = 0; i < difficulty.getWordLength(); i++){
-                for (int j = 0; j < difficulty.getWordLength(); j++) {
-                    if(guessArray[i] == correctWordCopy[j]){ // If correct letter
-                        if(i == j){ // If correct spot
-                            result[i] = 2;
-                            correctWordCopy[j] = '*';
+            for(int i = 0; i < difficulty.getWordLength(); i++){ //iterates through the inputted guess
+                for (int j = 0; j < difficulty.getWordLength(); j++) { //iterates through the correct word
+                    if(guessArray[i] == correctWordArray[j]){ // If a letter match is found
+                        if(i == j){ // If the letter is in the correct spot
+                            result[i] = 2; //updates result to show letter is correct, in the correct spot
                             break;
                         }
                         else{ // Correct letter && wrong spot; check to see if there is duplicate letter in the guess and see if it would be in the correct spot
-                            for(int k = i; k < guess.length(); k++){
+                            for(int k = i; k < guess.length(); k++){ //iterates through the rest of the guess
                                 if(guessArray[k] == guessArray[i]){ //letter @ k (guess) == letter @ i (guess)
                                     if(k == j){ // position of letter k (guess) == position of letter j (correct)
-                                        result[i] = 0;
                                         found = true;
                                         break;
                                     }
                                 }
                             }
                             if(!found){ // no duplicate found in the correct position
-                                result[i] = 1;
+                                result[i] = 1; //updates result to correct letter, wrong spot
                             }
                             break;
                         }
@@ -67,9 +64,6 @@ public class GameLogic {
                 }
             }
 
-        }
-        else{
-            return result;
         }
         numGuesses++;
         return result;
@@ -87,7 +81,7 @@ public class GameLogic {
 
 
     // Selects a random word from the data file to use as the correct word
-    public void generateCorrectWord(){
+    public String generateCorrectWord(){
         File file;
         String fileToRead;
         if(difficulty.getWordLength()==4){
@@ -115,8 +109,10 @@ public class GameLogic {
             Random rand = new Random(System.currentTimeMillis());
             correctWord = words.get(rand.nextInt(words.size()));
             System.out.println(correctWord);
+            return correctWord;
         } catch (Exception e) {
             System.out.println(e);
+            return correctWord;
         }
     }
 
