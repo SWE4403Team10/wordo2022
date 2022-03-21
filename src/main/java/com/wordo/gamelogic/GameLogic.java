@@ -30,7 +30,7 @@ public class GameLogic {
         return instance;
     }
 
-
+    //Fix logic, Example: correct "broke", guess "book"
     // Compares the user guess with the correct word
     public int[] checkGuess(String guess){
         this.guess = guess;
