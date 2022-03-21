@@ -18,7 +18,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.robot.Robot;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -179,6 +178,7 @@ public class Table {
                                      }
                                  }
                              });
+                        }
 
                         charInput.getTextField().textProperty().addListener((obs, s, t) -> { // Text Input Listener
                             if(lastColumn){
