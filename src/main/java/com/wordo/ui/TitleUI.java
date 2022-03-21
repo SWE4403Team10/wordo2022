@@ -56,6 +56,8 @@ public class TitleUI extends Application {
         btnPlay.setStyle("-fx-border: 2px; -fx-border-radius: 10px; -fx-font-size: 15px;");
         btnPlay.setOnAction(e -> {
             GameUI game = new GameUI();
+//            GameLogic gameLogic = new GameLogic();
+//            gameLogic.setDifficulty();
             game.setDiff(difficulty);
             game.start(titleStage);
         });
