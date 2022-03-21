@@ -11,6 +11,7 @@ public class GameLogic {
 
     private Difficulty difficulty;
     private String correctWord = "";
+    private String guess = "";
     private int numGuesses = 0;
     private static final GameLogic instance = new GameLogic();
 
@@ -31,6 +32,7 @@ public class GameLogic {
 
     // Compares the user guess with the correct word
     public int[] checkGuess(String guess){
+        this.guess = guess;
         int[] result = new int[difficulty.getWordLength()];
         char[] correctWordArray = correctWord.toCharArray();
         char[] guessArray = guess.toCharArray();
@@ -67,6 +69,18 @@ public class GameLogic {
         }
         numGuesses++;
         return result;
+    }
+
+
+    //Determines if a guess is correct or not
+    public boolean isCorrect(){
+        int[] result = checkGuess(guess);
+        for(int i = 0; i < guess.length(); i++){
+            if(result[i] != 2){
+                return false;
+            }
+        }
+        return true;
     }
 
 
