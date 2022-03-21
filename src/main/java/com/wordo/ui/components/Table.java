@@ -5,17 +5,21 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.robot.Robot;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
-import org.controlsfx.control.PropertySheet;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Table {
 
@@ -24,6 +28,7 @@ public class Table {
     private final ObservableList<Word> data = FXCollections.observableArrayList();
     private static String[] letters;
     private int guessNumber = 0;
+    private final List<Rectangle> tableCells = new ArrayList<Rectangle>();
 
     public Table(int diff) {
         tv = new TableView<>();
@@ -78,19 +83,24 @@ public class Table {
     private int currentRow;
 
     public void createColumnsCallbacks(boolean lastColumn) {
-        TableColumn<Word, Void> column = new TableColumn<>();
-        Callback<TableColumn<Word, Void>, TableCell<Word, Void>> factory = new Callback<>() {
+        TableColumn<Word, String> column = new TableColumn<>();
+        Callback<TableColumn<Word, String>, TableCell<Word, String>> factory = new Callback<>() {
 
             @Override
-            public TableCell<Word, Void> call(TableColumn<Word, Void> param) {
-                return new TableCell<Word, Void>() {
+            public TableCell<Word, String> call(TableColumn<Word, String> param) {
+                TableCell<Word, String> cell = new TableCell<Word, String>() {
 
                     private int columnIndex = param.getTableView().getColumns().indexOf(param);
                     private int rowIndex;
                     private TextField selectedTextField = null;
                     private TextField inputTF = new TextField();
+                    private Rectangle rec = new Rectangle(50.0, 10.0, 50.0, 10.0);
+                    private VBox vboxTemp = new VBox(inputTF, rec);
 
                     {
+                        tv.getFocusModel().focus(0, tv.getColumns().get(0));
+                        tv.requestFocus();
+
                         inputTF.setAlignment(Pos.CENTER);
                         inputTF.setMaxHeight(25);
                         inputTF.setMinHeight(25);
@@ -98,16 +108,43 @@ public class Table {
                         inputTF.setMinWidth(25);
                         inputTF.setStyle("-fx-background-color: transparent;");
 
+                        rec.setFill(Color.TRANSPARENT);
+                        rec.setId(columnIndex + " " + rowIndex);
+
+                        vboxTemp.setAlignment(Pos.CENTER);
+                        tableCells.add(rec);
+                        int[] temp = {0,1,2,1};
 
                         Robot robot = new Robot();
+                        if(numOfColumns-1 == columnIndex){
+                             inputTF.setOnKeyPressed(new EventHandler<KeyEvent>() {
+                                 @Override
+                                 public void handle(KeyEvent keyEvent) {
+                                     if(keyEvent.getCode() == KeyCode.ENTER){
+                                         for(int i = 0; i < tableCells.size(); i++){
+                                             System.out.println(tableCells.get(i));
+                                             System.out.println(tableCells.get(i).getId());
+                                             if(temp.length > i-4){
+                                                 changeColors(tableCells.get(i), temp[1]);
+                                             }
+                                                 System.out.println("bruh");
+
+
+                                         }
+                                         Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
+                                     }
+                                 }
+                             });
+                        }
+
                         inputTF.textProperty().addListener((obs, s, t) -> {
-                            if(t.length() == 1) {
+                            if(columnIndex == numOfColumns-1){
+                                if(t.length() >= 1){
+                                    inputTF.setText(inputTF.getText().substring(0,1));
+                                }
+                            } else {
                                 letters[columnIndex] = t;
-//                                if(columnIndex != numOfColumns-1){
-                                    Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
-//                                } else {
-//
-//                                }
+                                Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
                             }
                         });
 
@@ -116,8 +153,6 @@ public class Table {
                             selectedTextField = inputTF;
                             if(t1){
                                 if(currentRow < (selectedTextField.getId().charAt(2) - '0')) {
-                                    System.out.println(currentRow);
-                                    System.out.println(selectedTextField.getId().charAt(2));
                                     currentRow = selectedTextField.getId().charAt(2) - '0';
                                 }
                                 if(!inputTF.getText().equals("")){
@@ -125,9 +160,6 @@ public class Table {
                                         Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
                                     }
                                 }
-                                System.out.println("Selected Row " + selectedTextField.getId().charAt(2));
-                                System.out.println("Selected Row & Column " + selectedTextField.getId());
-                                System.out.println("Curr Row Index " + currentRow);
                             }
                         });
                     }
@@ -139,18 +171,18 @@ public class Table {
                     }
 
                     @Override
-                    protected void updateItem(Void item, boolean empty) {
+                    protected void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
 
-                        // assign item's toString value as text
-                        if (empty) {
+                        if(empty) {
                             setGraphic(null);
                         } else {
-                            setGraphic(inputTF);
+                            setGraphic(vboxTemp);
                         }
                     }
 
                 };
+                return cell;
             }
 
         };
@@ -159,6 +191,14 @@ public class Table {
         column.setSortable(false);
         tv.getColumns().add(column);
 
+    }
+
+    public void changeColors(Rectangle rectangle, int colorValue){
+        switch (colorValue) {
+            case 1 -> rectangle.setFill(Color.YELLOW);
+            case 2 -> rectangle.setFill(Color.GREEN);
+            default -> rectangle.setFill(Color.LIGHTGREY);
+        }
     }
 }
 
