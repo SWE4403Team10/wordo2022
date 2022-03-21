@@ -1,5 +1,6 @@
 package com.wordo.ui;
 
+import com.wordo.ui.components.Keyboard;
 import com.wordo.ui.components.Table;
 import com.wordo.ui.layout.SharedMethods;
 import javafx.application.Application;
@@ -57,6 +58,10 @@ public class GameUI extends Application {
 
         grid.add(hboxWord,2, 2, 2, 1);
 
+        //Keyboard
+        Keyboard keyboard = new Keyboard();
+        grid.add(keyboard.getKeyboard(), 3, 7);
+
 //        if(!getNumGuesses() || isCorrect()){
 //            lbl.setText(correctWord);
 //        } else {
@@ -65,7 +70,7 @@ public class GameUI extends Application {
 
         grid.add(table.getTable(), 1, 3, 5, 1);
 
-        Scene gameScene = new Scene(grid, 500, 400);
+        Scene gameScene = new Scene(grid, 550, 700);
         gameStage.setScene(gameScene);
         gameStage.show();
 
