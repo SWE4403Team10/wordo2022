@@ -152,6 +152,10 @@ public class GameLogic {
         return true;
     }
 
+    public int getDifficultyWordLength() {
+        return difficulty.getWordLength();
+    }
+
     // Get guess
     public String getGuess(){
         return guess;
