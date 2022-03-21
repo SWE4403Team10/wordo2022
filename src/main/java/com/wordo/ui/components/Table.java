@@ -50,7 +50,6 @@ public class Table {
         for (int i = 0; i < numOfColumns - 1; i++) {
             createColumnsCallbacks(false);
         }
-
         createColumnsCallbacks(true);
         tv.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
@@ -81,6 +80,10 @@ public class Table {
         tv.prefHeightProperty().bind(Bindings.size(tv.getItems()).multiply(tv.getFixedCellSize()).add(0));
     }
     private int currentRow;
+    private int[] guessResult = {};
+    private int minIndex = 4;
+    private int maxIndex = guessResult.length + 8;
+    private int guessIndex = 0;
 
     public void createColumnsCallbacks(boolean lastColumn) {
         TableColumn<Word, String> column = new TableColumn<>();
@@ -113,24 +116,24 @@ public class Table {
 
                         vboxTemp.setAlignment(Pos.CENTER);
                         tableCells.add(rec);
-                        int[] temp = {0,1,2,1};
 
                         Robot robot = new Robot();
-                        if(numOfColumns-1 == columnIndex){
+                        if(lastColumn){
                              inputTF.setOnKeyPressed(new EventHandler<KeyEvent>() {
                                  @Override
                                  public void handle(KeyEvent keyEvent) {
                                      if(keyEvent.getCode() == KeyCode.ENTER){
-                                         for(int i = 0; i < tableCells.size(); i++){
-                                             System.out.println(tableCells.get(i));
-                                             System.out.println(tableCells.get(i).getId());
-                                             if(temp.length > i-4){
-                                                 changeColors(tableCells.get(i), temp[1]);
+                                         guessResult = new int[]{0, 1, 2, 1};
+//                                         guessResult = checkGuesses(getGuess());
+                                         for(int i = minIndex; i < tableCells.size()+ minIndex; i++){
+                                             if(maxIndex > i){
+                                                 changeColors(tableCells.get(i), guessResult[guessIndex]);
+                                                 guessIndex++;
                                              }
-                                                 System.out.println("bruh");
-
-
                                          }
+                                         guessIndex = 0;
+                                         minIndex = maxIndex;
+                                         maxIndex += 4;
                                          Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
                                      }
                                  }
@@ -138,7 +141,7 @@ public class Table {
                         }
 
                         inputTF.textProperty().addListener((obs, s, t) -> {
-                            if(columnIndex == numOfColumns-1){
+                            if(lastColumn){
                                 if(t.length() >= 1){
                                     inputTF.setText(inputTF.getText().substring(0,1));
                                 }
@@ -186,7 +189,7 @@ public class Table {
             }
 
         };
-        column.setStyle("-fx-alignment: CENTER");
+        column.setStyle("-fx-alignment: CENTER; -fx-background-color: #FFFFFF;");
         column.setCellFactory(factory);
         column.setSortable(false);
         tv.getColumns().add(column);
@@ -200,6 +203,13 @@ public class Table {
             default -> rectangle.setFill(Color.LIGHTGREY);
         }
     }
+
+    public String getCorrectWord(){
+//        return generateCorrectWord();
+        return "";
+    }
+
+
 }
 
 

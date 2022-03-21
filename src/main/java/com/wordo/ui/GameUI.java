@@ -3,8 +3,10 @@ package com.wordo.ui;
 import com.wordo.ui.components.Table;
 import com.wordo.ui.layout.SharedMethods;
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -15,6 +17,7 @@ public class GameUI extends Application {
     private final GridPane grid = new GridPane();
     private final SharedMethods sharedMethods = new SharedMethods();
     private int diff = 0;
+    private String correctWord = "";
 
     @Override
     public void start(Stage primaryStage) {
@@ -45,6 +48,20 @@ public class GameUI extends Application {
         table.createColumns();
         table.addData();
         table.setNumberOfVisibleCells(50);
+
+        correctWord = table.getCorrectWord();
+
+        Label lblWord = new Label("");
+        HBox hboxWord = new HBox(lblWord);
+        hboxWord.setAlignment(Pos.CENTER);
+
+        grid.add(hboxWord,2, 2, 2, 1);
+
+//        if(!getNumGuesses() || isCorrect()){
+//            lbl.setText(correctWord);
+//        } else {
+//            lbl.setText("");
+//        }
 
         grid.add(table.getTable(), 1, 3, 5, 1);
 
