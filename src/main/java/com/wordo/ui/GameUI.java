@@ -1,5 +1,6 @@
 package com.wordo.ui;
 
+import com.wordo.gamelogic.GameLogic;
 import com.wordo.ui.components.Keyboard;
 import com.wordo.ui.components.Table;
 import com.wordo.ui.layout.SharedMethods;
@@ -8,6 +9,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -19,11 +22,14 @@ public class GameUI extends Application {
     private final SharedMethods sharedMethods = new SharedMethods();
     private int diff = 0;
     private String correctWord = "";
+    private GameLogic gameLogic = GameLogic.getInstance();
 
     @Override
     public void start(Stage primaryStage) {
         gameStage = primaryStage;
         sharedMethods.createRowsColumnsForGridPane(grid, 9, 7);
+
+        diff = gameLogic.getDifficultyWordLength();
 
 //        grid.setGridLinesVisible(true);
         grid.getColumnConstraints().get(0).setMaxWidth(70);
@@ -50,7 +56,7 @@ public class GameUI extends Application {
         table.addData();
         table.setNumberOfVisibleCells(50);
 
-        correctWord = table.getCorrectWord();
+        correctWord = gameLogic.generateCorrectWord();
 
         Label lblWord = new Label("");
         HBox hboxWord = new HBox(lblWord);
@@ -62,11 +68,12 @@ public class GameUI extends Application {
         Keyboard keyboard = new Keyboard();
         grid.add(keyboard.getKeyboard(), 3, 7);
 
-//        if(!getNumGuesses() || isCorrect()){
-//            lbl.setText(correctWord);
-//        } else {
-//            lbl.setText("");
-//        }
+        if(!gameLogic.getNumGuesses() || gameLogic.isCorrect()){
+            lblWord.setText(correctWord);
+        } else {
+            lblWord.setText("");
+        }
+
 
         grid.add(table.getTable(), 1, 3, 5, 1);
 
@@ -74,10 +81,6 @@ public class GameUI extends Application {
         gameStage.setScene(gameScene);
         gameStage.show();
 
-    }
-
-    public void setDiff(int numDiff){
-        diff = numDiff;
     }
 
     public static void main(String[] args) {

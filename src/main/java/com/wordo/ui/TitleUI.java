@@ -1,5 +1,6 @@
 package com.wordo.ui;
 
+import com.wordo.gamelogic.GameLogic;
 import com.wordo.ui.layout.SharedMethods;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -15,7 +16,7 @@ public class TitleUI extends Application {
     private Stage titleStage;
     private GridPane grid = new GridPane();
     private SharedMethods sharedmethods = new SharedMethods();
-    private int difficulty = 4;
+    private GameLogic gameLogic = GameLogic.getInstance();
 
     @Override
     public void start(Stage stage) {
@@ -26,6 +27,9 @@ public class TitleUI extends Application {
         sharedmethods.createRowsColumnsForGridPane(grid, 9, 7);
         grid.getColumnConstraints().get(0).setMaxWidth(25);
         grid.getColumnConstraints().get(6).setMaxWidth(25);
+
+        // Preset difficulty to easy
+        gameLogic.setDifficulty("easy");
 
         // Settings Button
         Button btnSettings = new Button("Settings");
@@ -56,9 +60,6 @@ public class TitleUI extends Application {
         btnPlay.setStyle("-fx-border: 2px; -fx-border-radius: 10px; -fx-font-size: 15px;");
         btnPlay.setOnAction(e -> {
             GameUI game = new GameUI();
-//            GameLogic gameLogic = new GameLogic();
-//            gameLogic.setDifficulty();
-            game.setDiff(difficulty);
             game.start(titleStage);
         });
 
@@ -72,13 +73,13 @@ public class TitleUI extends Application {
         RadioButton rbEasy = new RadioButton("Easy");
         rbEasy.setToggleGroup(tGroup);
         rbEasy.setSelected(true);
-        rbEasy.setOnAction(e -> { difficulty = 4; });
+        rbEasy.setOnAction(e -> { gameLogic.setDifficulty("easy"); });
         RadioButton rbMedium = new RadioButton("Medium");
         rbMedium.setToggleGroup(tGroup);
-        rbMedium.setOnAction(e -> { difficulty = 5; });
+        rbMedium.setOnAction(e -> { gameLogic.setDifficulty("normal"); });
         RadioButton rbHard = new RadioButton("Hard");
         rbHard.setToggleGroup(tGroup);
-        rbHard.setOnAction(e -> { difficulty = 6; });
+        rbHard.setOnAction(e -> { gameLogic.setDifficulty("hard"); });
 
         HBox hboxDifficulties = new HBox(rbEasy, rbMedium, rbHard);
         hboxDifficulties.setAlignment(Pos.CENTER);

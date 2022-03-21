@@ -1,6 +1,6 @@
 package com.wordo.ui.components;
 
-import com.wordo.ui.ColorStyle;
+import com.wordo.gamelogic.GameLogic;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.robot.Robot;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +30,9 @@ public class Table {
     private static String[] letters;
     private int guessNumber = 0;
     private final List<Rectangle> tableCells = new ArrayList<Rectangle>();
+    private final List<TextField> tableTF = new ArrayList<TextField>();
+    private GameLogic gameLogic = GameLogic.getInstance();
+    public String letter = "";
 
     public Table(int diff) {
         tv = new TableView<>();
@@ -41,7 +45,6 @@ public class Table {
             header.setMaxHeight(0);
             header.setVisible(false);
         });
-        tv.setEditable(true);
         Arrays.fill(letters, "");
         guessNumber = 0;
     }
@@ -111,6 +114,9 @@ public class Table {
                         inputTF.setMinWidth(25);
                         inputTF.setStyle("-fx-background-color: transparent;");
 
+//                        inputTF.setDisable(true);
+//                        tableTF.add(inputTF);
+
                         rec.setFill(Color.TRANSPARENT);
                         rec.setId(columnIndex + " " + rowIndex);
 
@@ -123,8 +129,7 @@ public class Table {
                                  @Override
                                  public void handle(KeyEvent keyEvent) {
                                      if(keyEvent.getCode() == KeyCode.ENTER){
-                                         guessResult = new int[]{0, 1, 2, 1};
-//                                         guessResult = checkGuesses(getGuess());
+                                         guessResult = gameLogic.checkGuess(getGuess());
                                          for(int i = minIndex; i < tableCells.size()+ minIndex; i++){
                                              if(maxIndex > i){
                                                  changeColors(tableCells.get(i), guessResult[guessIndex]);
@@ -143,6 +148,7 @@ public class Table {
                         inputTF.textProperty().addListener((obs, s, t) -> {
                             if(lastColumn){
                                 if(t.length() >= 1){
+                                    letters[columnIndex] = t;
                                     inputTF.setText(inputTF.getText().substring(0,1));
                                 }
                             } else {
@@ -208,6 +214,19 @@ public class Table {
 //        return generateCorrectWord();
         return "";
     }
+
+//    public void setLetter(String letter){
+//        int i = minIndex;
+//        if(maxIndex > i){
+//            System.out.println(letter);
+//            tableTF.get(i).setText(letter);
+//        }
+//        i++;
+//        guessIndex = 0;
+//        minIndex = maxIndex;
+//        maxIndex += 1;
+//        this.letter = letter;
+//    }
 
 
 }
