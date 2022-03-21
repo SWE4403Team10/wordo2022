@@ -12,6 +12,7 @@ public class GameLogic {
     private Difficulty difficulty;
     private String correctWord = "";
     private String guess = "";
+    public int[] result;
     private int numGuesses = 0;
     private static final GameLogic instance = new GameLogic();
 
@@ -34,6 +35,7 @@ public class GameLogic {
     public int[] checkGuess(String guess){
         this.guess = guess;
         int[] result = new int[difficulty.getWordLength()];
+        this.result = result;
         char[] correctWordArray = correctWord.toCharArray();
         char[] guessArray = guess.toCharArray();
         boolean found = false;
@@ -147,4 +149,17 @@ public class GameLogic {
         }
         return true;
     }
+
+    // Get guess
+    public String getGuess(){
+        return guess;
+    }
+
+
+    //Get Result
+    public int[] getResult(){
+        return result;
+    }
+
+
 }
