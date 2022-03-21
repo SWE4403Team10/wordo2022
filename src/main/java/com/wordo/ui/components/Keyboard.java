@@ -32,4 +32,18 @@ public class Keyboard {
         int i = querty.indexOf(c);
         return (KeyboardButton)keyboard.getChildren().toArray()[i];
     }
+
+    public void update(String guess, int[] response){
+        if(guess.length() != response.length){
+            System.err.println("Guess length did not match response length"); //debug
+            return;
+        }
+        for(int i = 0; i<guess.length(); i++){
+            KeyboardButton key = getKey(guess.charAt(i));
+            if(response[i] > key.getState()){
+                key.setState(response[i]);
+            }
+        }
+    }
+
 }

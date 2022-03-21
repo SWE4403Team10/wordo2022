@@ -76,6 +76,26 @@ public class GameLogic {
         return result;
     }
 
+    public boolean verifyWord(String word){
+        File fileToRead = new File("data/dictionary.txt");
+        boolean ret = false;
+        try{
+            BufferedReader reader = new BufferedReader(new FileReader(fileToRead));
+            String line = reader.readLine();
+            List<String> words = new ArrayList<String>();
+            while(line != null) {
+                if(line.contains(word)){
+                    ret = true;
+                }
+                line = reader.readLine();
+            }
+            reader.close();
+            return ret;
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
 
     //Determines if a guess is correct or not
     public boolean isCorrect(){
