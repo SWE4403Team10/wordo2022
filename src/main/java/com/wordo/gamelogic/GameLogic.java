@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static java.lang.Character.toLowerCase;
+
 public class GameLogic {
 
     private Difficulty difficulty;
@@ -15,10 +17,6 @@ public class GameLogic {
     public int[] result;
     private int numGuesses = 0;
     private static final GameLogic instance = new GameLogic();
-
-    private final Difficulty easyDifficulty = new EasyDifficulty();
-    private final Difficulty normalDifficulty = new NormalDifficulty();
-    private final Difficulty hardDifficulty = new HardDifficulty();
 
 
     // GameLogic Constructor:
@@ -30,7 +28,7 @@ public class GameLogic {
         return instance;
     }
 
-    //Fix logic, Example: correct "broke", guess "book"
+
     // Compares the user guess with the correct word
     public int[] checkGuess(String guess){
         this.guess = guess;
@@ -43,26 +41,30 @@ public class GameLogic {
         //check if guess meets word length difficulty requirements
         if(guess.length() == difficulty.getWordLength()){
 
-            for(int i = 0; i < difficulty.getWordLength(); i++){ //iterates through the inputted guess
-                for (int j = 0; j < difficulty.getWordLength(); j++) { //iterates through the correct word
-                    if(guessArray[i] == correctWordArray[j]){ // If a letter match is found
+            for(int i = 0; i < difficulty.getWordLength(); i++){ //iterates through the correct word
+                for (int j = 0; j < difficulty.getWordLength(); j++) { //iterates through the guess
+                    if(toLowerCase(correctWordArray[i]) == toLowerCase(guessArray[j])){ // If a letter match is found
+                        System.out.println("test: i = " + i + ", j = " + j);
                         if(i == j){ // If the letter is in the correct spot
+                            guessArray[j] = '*';
                             result[i] = 2; //updates result to show letter is correct, in the correct spot
                             break;
                         }
                         else{ // Correct letter && wrong spot; check to see if there is duplicate letter in the guess and see if it would be in the correct spot
-                            for(int k = i; k < guess.length(); k++){ //iterates through the rest of the guess
-                                if(guessArray[k] == guessArray[i]){ //letter @ k (guess) == letter @ i (guess)
-                                    if(k == j){ // position of letter k (guess) == position of letter j (correct)
+                            if(j+1<difficulty.getWordLength() && i>j){
+                                for(int k = j+1; k < difficulty.getWordLength(); k++){
+                                    if(toLowerCase(correctWordArray[i]) == toLowerCase(guessArray[k]) && i == k){
+                                        guessArray[j] = '*';
                                         found = true;
                                         break;
                                     }
                                 }
                             }
-                            if(!found){ // no duplicate found in the correct position
-                                result[i] = 1; //updates result to correct letter, wrong spot
+                            if(!found){
+                                result[j] = 1;
+                                break;
                             }
-                            break;
+
                         }
                     }
                 }
@@ -70,14 +72,14 @@ public class GameLogic {
 
         }
         numGuesses++;
+        //keyboard.update(guess, result);
         return result;
     }
 
 
     //Determines if a guess is correct or not
     public boolean isCorrect(){
-        int[] result = checkGuess(guess);
-        for(int i = 0; i < guess.length(); i++){
+        for(int i = 0; i < difficulty.getWordLength(); i++){
             if(result[i] != 2){
                 return false;
             }
@@ -136,13 +138,13 @@ public class GameLogic {
     // Allows the difficulty to be changed
     public boolean setDifficulty(String difficultyIn){
         if(difficultyIn.equalsIgnoreCase("easy")){
-            difficulty = easyDifficulty;
+            difficulty = new EasyDifficulty();
         }
         else if(difficultyIn.equalsIgnoreCase("normal")){
-            difficulty = normalDifficulty;
+            difficulty = new NormalDifficulty();
         }
         else if(difficultyIn.equalsIgnoreCase("hard")){
-            difficulty = hardDifficulty;
+            difficulty = new HardDifficulty();
         }
         else{
             return false;
