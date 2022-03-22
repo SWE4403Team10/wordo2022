@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.robot.Robot;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +30,7 @@ public class Table {
     private int numOfColumns;
     private final ObservableList<Word> data = FXCollections.observableArrayList();
     private static String[] letters;
+    private int guessNumber = 0;
     private final List<Rectangle> tableCells = new ArrayList<Rectangle>();
     private final List<TextField> tableTF = new ArrayList<TextField>();
     private GameLogic gameLogic = GameLogic.getInstance();
