@@ -5,6 +5,10 @@ import com.wordo.ui.components.Keyboard;
 import com.wordo.ui.components.Table;
 import com.wordo.ui.layout.SharedMethods;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -14,6 +18,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class GameUI extends Application {
 
@@ -23,6 +28,8 @@ public class GameUI extends Application {
     private int diff = 0;
     private String correctWord = "";
     private GameLogic gameLogic = GameLogic.getInstance();
+    private Label lblWord = new Label("");
+    private Label lblWin = new Label("");
 
     @Override
     public void start(Stage primaryStage) {
@@ -50,37 +57,42 @@ public class GameUI extends Application {
         hboxExit.setMaxSize(100, 75);
         grid.add(hboxExit, 0, 0);
 
+        HBox hboxWord = new HBox(lblWin, lblWord);
+        hboxWord.setAlignment(Pos.CENTER);
+        hboxWord.setSpacing(15);
+
+        grid.add(hboxWord,2, 2, 2, 1);
+
         //Table
         Table table = new Table(diff);
         table.createColumns();
         table.addData();
         table.setNumberOfVisibleCells(50);
+        table.setGameUI(this);
 
         correctWord = gameLogic.generateCorrectWord();
-
-        Label lblWord = new Label("");
-        HBox hboxWord = new HBox(lblWord);
-        hboxWord.setAlignment(Pos.CENTER);
-
-        grid.add(hboxWord,2, 2, 2, 1);
 
         //Keyboard
         Keyboard keyboard = new Keyboard();
         grid.add(keyboard.getKeyboard(), 3, 7);
 
-        if(!gameLogic.getNumGuesses() || gameLogic.isCorrect()){
-            lblWord.setText(correctWord);
-        } else {
-            lblWord.setText("");
-        }
-
-
         grid.add(table.getTable(), 1, 3, 5, 1);
 
         Scene gameScene = new Scene(grid, 550, 700);
+
         gameStage.setScene(gameScene);
         gameStage.show();
 
+    }
+
+    public void showWord(boolean show){
+        if(show){
+            lblWin.setText("Winner!");
+            lblWord.setText(correctWord);
+        } else {
+            lblWord = new Label("Good luck next time!");
+            lblWord.setText("");
+        }
     }
 
     public static void main(String[] args) {

@@ -1,6 +1,8 @@
 package com.wordo.ui.components;
 
 import com.wordo.gamelogic.GameLogic;
+import com.wordo.ui.GameUI;
+import com.wordo.ui.components.elements.CustomTextField;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -32,7 +34,7 @@ public class Table {
     private final List<Rectangle> tableCells = new ArrayList<Rectangle>();
     private final List<TextField> tableTF = new ArrayList<TextField>();
     private GameLogic gameLogic = GameLogic.getInstance();
-    public String letter = "";
+    private GameUI gameUI = new GameUI();
 
     public Table(int diff) {
         tv = new TableView<>();
@@ -104,24 +106,22 @@ public class Table {
                     private VBox vboxTemp = new VBox(inputTF, rec);
 
                     {
-                        tv.getFocusModel().focus(0, tv.getColumns().get(0));
-                        tv.requestFocus();
+
 
                         inputTF.setAlignment(Pos.CENTER);
-                        inputTF.setMaxHeight(25);
-                        inputTF.setMinHeight(25);
-                        inputTF.setMaxWidth(25);
-                        inputTF.setMinWidth(25);
-                        inputTF.setStyle("-fx-background-color: transparent;");
+                        inputTF.setMaxHeight(27);
+                        inputTF.setMinHeight(27);
+                        inputTF.setMaxWidth(35);
+                        inputTF.setMinWidth(35);
+                        inputTF.setStyle("-fx-background-color: transparent; -fx-font-size: 15px;");
 
-//                        inputTF.setDisable(true);
-//                        tableTF.add(inputTF);
 
                         rec.setFill(Color.TRANSPARENT);
                         rec.setId(columnIndex + " " + rowIndex);
 
                         vboxTemp.setAlignment(Pos.CENTER);
                         tableCells.add(rec);
+                        tableTF.add(inputTF);
 
                         Robot robot = new Robot();
                         if(lastColumn){
@@ -135,6 +135,12 @@ public class Table {
                                                  changeColors(tableCells.get(i), guessResult[guessIndex]);
                                                  guessIndex++;
                                              }
+                                         }
+                                         if(!gameLogic.getNumGuesses() || gameLogic.isCorrect()){
+                                             gameUI.showWord(true);
+                                             tv.setDisable(true);
+                                         } else {
+                                             gameUI.showWord(false);
                                          }
                                          guessIndex = 0;
                                          minIndex = maxIndex;
@@ -166,6 +172,10 @@ public class Table {
                                 }
                                 if(!inputTF.getText().equals("")){
                                     if((selectedTextField.getId().charAt(2) - '0') < currentRow){
+                                        Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
+                                    }
+                                } else if(inputTF.getText().equals("")){
+                                    if((selectedTextField.getId().charAt(2) - '0') > currentRow){
                                         Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
                                     }
                                 }
@@ -210,24 +220,7 @@ public class Table {
         }
     }
 
-    public String getCorrectWord(){
-//        return generateCorrectWord();
-        return "";
-    }
-
-//    public void setLetter(String letter){
-//        int i = minIndex;
-//        if(maxIndex > i){
-//            System.out.println(letter);
-//            tableTF.get(i).setText(letter);
-//        }
-//        i++;
-//        guessIndex = 0;
-//        minIndex = maxIndex;
-//        maxIndex += 1;
-//        this.letter = letter;
-//    }
-
+    public void setGameUI(GameUI gameUI){ this.gameUI = gameUI; }
 
 }
 

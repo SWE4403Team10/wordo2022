@@ -77,7 +77,7 @@ public class GameLogic {
     //Determines if a guess is correct or not
     public boolean isCorrect(){
         int[] result = checkGuess(guess);
-        for(int i = 0; i < guess.length(); i++){
+        for(int i = 0; i < result.length; i++){
             if(result[i] != 2){
                 return false;
             }
@@ -88,6 +88,7 @@ public class GameLogic {
 
     // Gets the current number of guesses
     public boolean getNumGuesses(){
+        System.out.println(numGuesses);
         if(numGuesses == 6){
             numGuesses = 0;
             return false;
