@@ -2,7 +2,6 @@ package com.wordo.ui.components;
 
 import com.wordo.gamelogic.GameLogic;
 import com.wordo.ui.GameUI;
-import com.wordo.ui.components.elements.CustomTextField;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -30,7 +29,6 @@ public class Table {
     private int numOfColumns;
     private final ObservableList<Word> data = FXCollections.observableArrayList();
     private static String[] letters;
-    private int guessNumber = 0;
     private final List<Rectangle> tableCells = new ArrayList<Rectangle>();
     private final List<TextField> tableTF = new ArrayList<TextField>();
     private GameLogic gameLogic = GameLogic.getInstance();
@@ -48,7 +46,6 @@ public class Table {
             header.setVisible(false);
         });
         Arrays.fill(letters, "");
-        guessNumber = 0;
     }
 
     public void createColumns() {
@@ -86,8 +83,8 @@ public class Table {
     }
     private int currentRow;
     private int[] guessResult = {};
-    private int minIndex = 4;
-    private int maxIndex = guessResult.length + 8;
+    private int minIndex = gameLogic.getDifficultyWordLength();
+    private int maxIndex = guessResult.length + minIndex*2;
     private int guessIndex = 0;
 
     public void createColumnsCallbacks(boolean lastColumn) {
@@ -107,7 +104,6 @@ public class Table {
 
                     {
 
-
                         inputTF.setAlignment(Pos.CENTER);
                         inputTF.setMaxHeight(27);
                         inputTF.setMinHeight(27);
@@ -115,6 +111,7 @@ public class Table {
                         inputTF.setMinWidth(35);
                         inputTF.setStyle("-fx-background-color: transparent; -fx-font-size: 15px;");
 
+//                        tv.setDisable(true);
 
                         rec.setFill(Color.TRANSPARENT);
                         rec.setId(columnIndex + " " + rowIndex);
@@ -144,7 +141,7 @@ public class Table {
                                          }
                                          guessIndex = 0;
                                          minIndex = maxIndex;
-                                         maxIndex += 4;
+                                         maxIndex += gameLogic.getDifficultyWordLength();
                                          Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
                                      }
                                  }
@@ -172,10 +169,6 @@ public class Table {
                                 }
                                 if(!inputTF.getText().equals("")){
                                     if((selectedTextField.getId().charAt(2) - '0') < currentRow){
-                                        Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
-                                    }
-                                } else if(inputTF.getText().equals("")){
-                                    if((selectedTextField.getId().charAt(2) - '0') > currentRow){
                                         Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
                                     }
                                 }
@@ -221,6 +214,48 @@ public class Table {
     }
 
     public void setGameUI(GameUI gameUI){ this.gameUI = gameUI; }
+
+//    int i = minIndex;
+//    public void modifyTable(String value, KeyCode keyCode){
+//        if(i%numOfColumns == numOfColumns-1){
+//            lastColumn = true;
+//        }
+//        if(lastColumn){
+//            if(keyCode == KeyCode.ENTER){
+//                System.out.println(i);
+//                guessResult = gameLogic.checkGuess(getGuess());
+//                for(int j = minIndex; j < tableCells.size()+minIndex; j++){
+//                    if(maxIndex > i){
+//                        changeColors(tableCells.get(j), guessResult[guessIndex]);
+//                        guessIndex++;
+//                    }
+//                }
+//                if(!gameLogic.getNumGuesses() || gameLogic.isCorrect()){
+//                    gameUI.showWord(true);
+////                tv.setDisable(true);
+//                } else {
+//                    gameUI.showWord(false);
+//                }
+//                guessIndex = 0;
+//                minIndex = maxIndex;
+//                maxIndex += 4;
+//                lastColumn = false;
+//                i++;
+//            }
+//        } else if(keyCode == KeyCode.BACK_SPACE){
+//            System.out.println(i);
+//            tableTF.get(i).setText("");
+////            i -= i;
+//        } else if(keyCode.isLetterKey()){
+//            System.out.println(i);
+//            if(lastColumn){
+//                tableTF.get(i).setText(value);
+//            } else {
+//                tableTF.get(i).setText(value);
+//                i++;
+//            }
+//        }
+//    }
 
 }
 
