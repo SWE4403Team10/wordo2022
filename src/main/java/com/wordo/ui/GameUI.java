@@ -80,6 +80,10 @@ public class GameUI extends Application {
 
         Scene gameScene = new Scene(grid, 550, 700);
 
+//        gameScene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
+//            table.modifyTable(String.valueOf(key.getCode()), key.getCode());
+//        });
+
         gameStage.setScene(gameScene);
         gameStage.show();
 
