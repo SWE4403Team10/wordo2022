@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 
 public class KeyboardButton {
     private Button button;
+    private int state;
 
     public Button getButton(){
         return button;
@@ -18,28 +19,36 @@ public class KeyboardButton {
         button.setPrefWidth(33);
         button.setStyle("-fx-background-color: #A9A9A9; -fx-text-fill: #ffffff; ");
         button.setStyle("-fx-background-color: #A9A9A9; -fx-text-fill: #ffffff; ");
-
-        //TODO call controller class to update table
+        /*
         button.setOnAction(actionEvent -> {
             System.out.println(button.getText());
-            this.setState("GRAY");
-        });
+            this.setState(1);
+        });*/ //Disable input via buttons
     }
 
-    public void setState(String color){
+    public void setState(int color){
         switch(color){
-            case "GREEN":
+            case 2:
                 button.setStyle("-fx-background-color: #008000; -fx-text-fill: #ffffff; ");
+                state = 2;
                 break;
-            case "YELLOW":
+            case 1:
                 button.setStyle("-fx-background-color: #FFD700; -fx-text-fill: #ffffff; ");
+                state = 1;
                 break;
-            case "GRAY":
+            case 0:
                 button.setStyle("-fx-background-color: #3C3C3C; -fx-text-fill: #ffffff; ");
+                state = 0;
                 //button.setDisable(true); Allow users to click the button even if letter is not in word
                 break;
             default:
                 button.setStyle("-fx-background-color: #A9A9A9; -fx-text-fill: #ffffff; ");
+                state = -1;
         }
     }
+
+    public int getState(){
+        return state;
+    }
+
 }
