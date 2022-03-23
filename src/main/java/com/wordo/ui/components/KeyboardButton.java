@@ -1,10 +1,12 @@
 package com.wordo.ui.components;
 
+import com.wordo.ui.components.elements.Element;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 
-public class KeyboardButton {
+public class KeyboardButton implements Element {
     private Button button;
+    private char character;
     private int state;
 
     public Button getButton(){
@@ -13,6 +15,7 @@ public class KeyboardButton {
 
     // Constructor
     public KeyboardButton(char c){
+        this.character = c;
         button = new Button(""+c);
         button.setAlignment(Pos.BOTTOM_CENTER);
         button.setPrefHeight(50);
@@ -51,4 +54,6 @@ public class KeyboardButton {
         return state;
     }
 
+    @Override
+    public Element clone() { return new KeyboardButton(this.character); }
 }
