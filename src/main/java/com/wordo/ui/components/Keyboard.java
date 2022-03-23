@@ -4,8 +4,11 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.TilePane;
 
+import java.util.ArrayList;
+
 public class Keyboard {
     private final TilePane keyboard;
+    private ArrayList<KeyboardButton> buttons = new ArrayList<>();
 
     final String querty = "qwertyuiopasdfghjklzxcvbnm";
     private KeyboardButton startButton = new KeyboardButton(' ');
@@ -20,6 +23,7 @@ public class Keyboard {
         for(char c : querty.toCharArray()){
             KeyboardButton button = (KeyboardButton)startButton.clone();
             button.getButton().setText(""+c);
+            buttons.add(button);
             keyboard.getChildren().add(button.getButton());
         }
         keyboard.setTileAlignment(Pos.CENTER);
@@ -31,7 +35,7 @@ public class Keyboard {
 
     public KeyboardButton getKey(char c){
         int i = querty.indexOf(c);
-        return (KeyboardButton)keyboard.getChildren().toArray()[i];
+        return buttons.get(i);
     }
 
     public void update(String guess, int[] response){
