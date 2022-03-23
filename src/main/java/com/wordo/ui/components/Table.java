@@ -86,6 +86,7 @@ public class Table {
     private int minIndex = gameLogic.getDifficultyWordLength();
     private int maxIndex = guessResult.length + minIndex*2;
     private int guessIndex = 0;
+    private boolean lastColumn = false;
 
     public void createColumnsCallbacks(boolean lastColumn) {
         TableColumn<Word, String> column = new TableColumn<>();
@@ -121,32 +122,35 @@ public class Table {
                         tableTF.add(inputTF);
 
                         Robot robot = new Robot();
-                        if(lastColumn){
                              inputTF.setOnKeyPressed(new EventHandler<KeyEvent>() {
                                  @Override
                                  public void handle(KeyEvent keyEvent) {
-                                     if(keyEvent.getCode() == KeyCode.ENTER){
-                                         guessResult = gameLogic.checkGuess(getGuess());
-                                         for(int i = minIndex; i < tableCells.size()+ minIndex; i++){
-                                             if(maxIndex > i){
-                                                 changeColors(tableCells.get(i), guessResult[guessIndex]);
-                                                 guessIndex++;
+                                     if(lastColumn){
+                                         if(keyEvent.getCode() == KeyCode.ENTER){
+                                             guessResult = gameLogic.checkGuess(getGuess());
+                                             for(int i = minIndex; i < tableCells.size()+ minIndex; i++){
+                                                 if(maxIndex > i){
+                                                     changeColors(tableCells.get(i), guessResult[guessIndex]);
+                                                     guessIndex++;
+                                                 }
                                              }
+                                             if(gameLogic.isCorrect()){
+                                                 gameUI.showWord(true);
+                                                 tv.setDisable(true);
+                                             } else if(!gameLogic.getNumGuesses()){
+                                                 gameUI.showWord(false);
+                                             }
+                                             guessIndex = 0;
+                                             minIndex = maxIndex;
+                                             maxIndex += gameLogic.getDifficultyWordLength();
+                                             Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
                                          }
-                                         if(!gameLogic.getNumGuesses() || gameLogic.isCorrect()){
-                                             gameUI.showWord(true);
-                                             tv.setDisable(true);
-                                         } else {
-                                             gameUI.showWord(false);
-                                         }
-                                         guessIndex = 0;
-                                         minIndex = maxIndex;
-                                         maxIndex += gameLogic.getDifficultyWordLength();
-                                         Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
+                                     }
+                                     if(keyEvent.getCode() == KeyCode.BACK_SPACE){
+                                         tableTF.get(tableTF.indexOf(selectedTextField)-1).requestFocus();
                                      }
                                  }
                              });
-                        }
 
                         inputTF.textProperty().addListener((obs, s, t) -> {
                             if(lastColumn){
@@ -170,6 +174,9 @@ public class Table {
                                 if(!inputTF.getText().equals("")){
                                     if((selectedTextField.getId().charAt(2) - '0') < currentRow){
                                         Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
+                                    }
+                                    if((selectedTextField.getId().charAt(2) - '0') == currentRow) {
+                                        selectedTextField.setText("");
                                     }
                                 }
                             }
@@ -220,12 +227,27 @@ public class Table {
 //        if(i%numOfColumns == numOfColumns-1){
 //            lastColumn = true;
 //        }
+//        if(keyCode.isLetterKey()){
+////            System.out.println(i + " letter");
+//            if(lastColumn){
+//                tableTF.get(i).setText(value);
+//            } else {
+//                tableTF.get(i).setText(value);
+//                i++;
+//            }
+//        }
+//        if(keyCode == KeyCode.BACK_SPACE){
+////            System.out.println(i);
+//            tableTF.get(i).setText("");
+//            i -= i;
+//        }
 //        if(lastColumn){
-//            if(keyCode == KeyCode.ENTER){
-//                System.out.println(i);
+//            System.out.println(keyCode + ", " + KeyCode.ENTER + ", " + value);
+//            if(keyCode.equals(KeyCode.ENTER)){
+//                System.out.println(i + " enter");
 //                guessResult = gameLogic.checkGuess(getGuess());
 //                for(int j = minIndex; j < tableCells.size()+minIndex; j++){
-//                    if(maxIndex > i){
+//                    if(maxIndex > j){
 //                        changeColors(tableCells.get(j), guessResult[guessIndex]);
 //                        guessIndex++;
 //                    }
@@ -240,18 +262,6 @@ public class Table {
 //                minIndex = maxIndex;
 //                maxIndex += 4;
 //                lastColumn = false;
-//                i++;
-//            }
-//        } else if(keyCode == KeyCode.BACK_SPACE){
-//            System.out.println(i);
-//            tableTF.get(i).setText("");
-////            i -= i;
-//        } else if(keyCode.isLetterKey()){
-//            System.out.println(i);
-//            if(lastColumn){
-//                tableTF.get(i).setText(value);
-//            } else {
-//                tableTF.get(i).setText(value);
 //                i++;
 //            }
 //        }
