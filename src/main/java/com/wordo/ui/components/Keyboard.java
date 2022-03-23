@@ -7,8 +7,8 @@ import javafx.scene.layout.TilePane;
 public class Keyboard {
     private final TilePane keyboard;
 
-
     final String querty = "qwertyuiopasdfghjklzxcvbnm";
+    private KeyboardButton startButton = new KeyboardButton(' ');
 
     public TilePane getKeyboard() {
         return keyboard;
@@ -18,7 +18,8 @@ public class Keyboard {
         keyboard = new TilePane();
 
         for(char c : querty.toCharArray()){
-            KeyboardButton button = new KeyboardButton(c);
+            KeyboardButton button = (KeyboardButton)startButton.clone();
+            button.getButton().setText(""+c);
             keyboard.getChildren().add(button.getButton());
         }
         keyboard.setTileAlignment(Pos.CENTER);
