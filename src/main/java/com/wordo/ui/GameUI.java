@@ -29,6 +29,8 @@ public class GameUI extends Application {
     private WordoLabel lblWord = new WordoLabel("");
     private WordoLabel lblWin = (WordoLabel) lblWord.clone();
     private WordoButton exitGameButton;
+    private Table table;
+    private Keyboard keyboard = new Keyboard();
 
     @Override
     public void start(Stage primaryStage) {
@@ -63,7 +65,7 @@ public class GameUI extends Application {
         grid.add(hboxWord,2, 2, 2, 1);
 
         //Table
-        Table table = new Table(diff);
+        table = new Table(diff);
         table.createColumns();
         table.addData();
         table.setNumberOfVisibleCells(50);
@@ -72,7 +74,6 @@ public class GameUI extends Application {
         correctWord = gameLogic.generateCorrectWord();
 
         //Keyboard
-        Keyboard keyboard = new Keyboard();
         grid.add(keyboard.getKeyboard(), 3, 7);
 
         grid.add(table.getTable(), 1, 3, 5, 1);
@@ -86,6 +87,10 @@ public class GameUI extends Application {
 
     }
 
+    public Keyboard getKeyboard(){
+        return keyboard;
+    }
+
     /**
      * Updates the Win label and the Word label to the correct text based on the result of the user.
      * @param show
@@ -95,8 +100,14 @@ public class GameUI extends Application {
             lblWin.setLblText("Winner!");
             lblWord.setLblText(correctWord);
         } else {
-            lblWin.setLblText("Good luck next time!");
-            lblWord.setLblText("");
+            if(!gameLogic.getNumGuesses()){
+                lblWin.setLblText("Good luck next time!");
+                lblWord.setLblText(correctWord);
+            } else {
+                lblWin.setLblText("Not a valid word!");
+                lblWord.setLblText("");
+            }
+
         }
     }
 

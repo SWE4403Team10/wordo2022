@@ -151,42 +151,44 @@ public class Table {
                         tableTF.add(charInput.getTextField());
 
                         Robot robot = new Robot();
-                             charInput.getTextField().setOnKeyPressed(new EventHandler<KeyEvent>() { // When a key is pressed, do the following.
-                                 @Override
-                                 public void handle(KeyEvent keyEvent) { // How it will handle the key press.
-                                     if(lastColumn){
-                                         if(keyEvent.getCode() == KeyCode.ENTER){ // If the key pressed is ENTER.
-                                             guessResult = gameLogic.checkGuess(getGuess());
-                                             for(int i = minIndex; i < tableCells.size()+ minIndex; i++){
-                                                 if(maxIndex > i){ // Only allows the current row (guess) to be coloured.
-                                                     changeColors(tableCells.get(i), guessResult[guessIndex]);
-                                                     guessIndex++;
-                                                 }
-                                             }
-                                             if(gameLogic.isCorrect()){ // A check to see if the guess is correct.
-                                                 gameUI.showWord(true);
-                                                 tv.setDisable(true);
-                                             } else if(!gameLogic.getNumGuesses()){
-                                                 gameUI.showWord(false);
-                                             }
-                                             guessIndex = 0;
-                                             minIndex = maxIndex;
-                                             maxIndex += gameLogic.getDifficultyWordLength();
-                                             Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
-                                         }
-                                     }
-                                     if(keyEvent.getCode() == KeyCode.BACK_SPACE){ // If the key pressed is BACK_SPACE.
-                                         tableTF.get(tableTF.indexOf(selectedTextField)-1).requestFocus();
-                                     }
-                                 }
-                             });
-                        }
+                        charInput.getTextField().setOnKeyPressed(new EventHandler<KeyEvent>() { // When a key is pressed, do the following.
+                            @Override
+                            public void handle(KeyEvent keyEvent) { // How it will handle the key press.
+                                if (lastColumn) {
+                                    if (keyEvent.getCode() == KeyCode.ENTER) { // If the key pressed is ENTER.
+                                        if(gameLogic.verifyWord(getGuess())){
+                                            gameUI.showWord(false);
+                                        }
+                                        guessResult = gameLogic.checkGuess(getGuess());
+                                        for (int i = minIndex; i < tableCells.size() + minIndex; i++) {
+                                            if (maxIndex > i) { // Only allows the current row (guess) to be coloured.
+                                                changeColors(tableCells.get(i), guessResult[guessIndex]);
+                                                guessIndex++;
+                                            }
+                                        }
+                                        if (gameLogic.isCorrect()) { // A check to see if the guess is correct.
+                                            gameUI.showWord(true);
+                                            tv.setDisable(true);
+                                        } else if (!gameLogic.getNumGuesses()) {
+                                            gameUI.showWord(false);
+                                        }
+                                        guessIndex = 0;
+                                        minIndex = maxIndex;
+                                        maxIndex += gameLogic.getDifficultyWordLength();
+                                        Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
+                                    }
+                                }
+                                if (keyEvent.getCode() == KeyCode.BACK_SPACE) { // If the key pressed is BACK_SPACE.
+                                    tableTF.get(tableTF.indexOf(selectedTextField) - 1).requestFocus();
+                                }
+                            }
+                        });
 
                         charInput.getTextField().textProperty().addListener((obs, s, t) -> { // Text Input Listener
-                            if(lastColumn){
-                                if(t.length() >= 1){ // If the length of the input is >= 1.
+                            if (lastColumn) {
+                                if (t.length() >= 1) { // If the length of the input is >= 1.
                                     letters[columnIndex] = t;
-                                    charInput.getTextField().setText(charInput.getTextField().getText().substring(0,1));
+                                    charInput.getTextField().setText(charInput.getTextField().getText().substring(0, 1));
                                 }
                             } else {
                                 letters[columnIndex] = t;
@@ -197,15 +199,15 @@ public class Table {
                         charInput.getTextField().focusedProperty().addListener((observableValue, aBoolean, t1) -> { // Listens for when a textfield is focus upon.
                             charInput.getTextField().setId(columnIndex + " " + rowIndex);
                             selectedTextField = charInput.getTextField();
-                            if(t1){
-                                if(currentRow < (selectedTextField.getId().charAt(2) - '0')) {
+                            if (t1) {
+                                if (currentRow < (selectedTextField.getId().charAt(2) - '0')) {
                                     currentRow = selectedTextField.getId().charAt(2) - '0'; // Updates to the current guess (row).
                                 }
-                                if(!charInput.getTextField().getText().equals("")){ // If the focused textfield has a value inside.
-                                    if((selectedTextField.getId().charAt(2) - '0') < currentRow){
+                                if (!charInput.getTextField().getText().equals("")) { // If the focused textfield has a value inside.
+                                    if ((selectedTextField.getId().charAt(2) - '0') < currentRow) {
                                         Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
                                     }
-                                    if((selectedTextField.getId().charAt(2) - '0') == currentRow) {
+                                    if ((selectedTextField.getId().charAt(2) - '0') == currentRow) {
                                         selectedTextField.setText("");
                                     }
                                 }

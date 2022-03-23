@@ -1,5 +1,7 @@
 package com.wordo.gamelogic;
 
+import com.wordo.ui.GameUI;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -16,6 +18,7 @@ public class GameLogic {
     private String guess = "";
     public int[] result;
     private int numGuesses = 0;
+    private GameUI gameUI = new GameUI();
     private static final GameLogic instance = new GameLogic();
 
 
@@ -72,7 +75,7 @@ public class GameLogic {
 
         }
         numGuesses++;
-        //keyboard.update(guess, result);
+        gameUI.getKeyboard().update(guess, result);
         return result;
     }
 
