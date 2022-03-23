@@ -94,7 +94,7 @@ public class GameUI extends Application {
             lblWin.setText("Winner!");
             lblWord.setText(correctWord);
         } else {
-            lblWord = new Label("Good luck next time!");
+            lblWin.setText("Good luck next time!");
             lblWord.setText("");
         }
     }
