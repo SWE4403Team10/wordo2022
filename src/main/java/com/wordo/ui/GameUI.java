@@ -3,6 +3,9 @@ package com.wordo.ui;
 import com.wordo.gamelogic.GameLogic;
 import com.wordo.ui.components.Keyboard;
 import com.wordo.ui.components.Table;
+import com.wordo.ui.components.elements.Element;
+import com.wordo.ui.components.elements.WordoButton;
+import com.wordo.ui.components.elements.WordoLabel;
 import com.wordo.ui.layout.SharedMethods;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -28,8 +31,9 @@ public class GameUI extends Application {
     private int diff = 0;
     private String correctWord = "";
     private GameLogic gameLogic = GameLogic.getInstance();
-    private Label lblWord = new Label("");
-    private Label lblWin = new Label("");
+    private WordoLabel lblWord = new WordoLabel("");
+    private WordoLabel lblWin = (WordoLabel) lblWord.clone();
+    private WordoButton exitGameButton;
 
     @Override
     public void start(Stage primaryStage) {
@@ -45,19 +49,19 @@ public class GameUI extends Application {
         grid.getColumnConstraints().get(6).setMinWidth(70);
         grid.getRowConstraints().get(8).setMinHeight(30);
 
-        Button btnExitGame = new Button("Exit Game");
-        btnExitGame.setMaxSize(75, 25);
-        btnExitGame.setStyle("-fx-background-color: transparent; -fx-background-size: 50px; -fx-background-repeat: no-repeat; -fx-border-color: transparent;");
-        btnExitGame.setOnAction(e -> {
+        // ExitGame
+        exitGameButton = new WordoButton(75, 25,"Exit Game", "-fx-background-color: transparent; -fx-background-size: 50px; -fx-background-repeat: no-repeat; -fx-border-color: transparent;");
+        exitGameButton.getButton().setOnAction(e -> {
             TitleUI title = new TitleUI();
             title.start(gameStage);
         });
 
-        HBox hboxExit = new HBox(btnExitGame);
+        HBox hboxExit = new HBox(exitGameButton.getButton());
         hboxExit.setMaxSize(100, 75);
         grid.add(hboxExit, 0, 0);
 
-        HBox hboxWord = new HBox(lblWin, lblWord);
+        // Word
+        HBox hboxWord = new HBox(lblWin.getLabel(), lblWord.getLabel());
         hboxWord.setAlignment(Pos.CENTER);
         hboxWord.setSpacing(15);
 
@@ -78,24 +82,26 @@ public class GameUI extends Application {
 
         grid.add(table.getTable(), 1, 3, 5, 1);
 
+        // Scene
         Scene gameScene = new Scene(grid, 550, 700);
 
-//        gameScene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
-//            table.modifyTable(String.valueOf(key.getCode()), key.getCode());
-//        });
-
+        // Stage
         gameStage.setScene(gameScene);
         gameStage.show();
 
     }
 
+    /**
+     * Updates the Win label and the Word label to the correct text based on the result of the user.
+     * @param show
+     */
     public void showWord(boolean show){
         if(show){
-            lblWin.setText("Winner!");
-            lblWord.setText(correctWord);
+            lblWin.setLblText("Winner!");
+            lblWord.setLblText(correctWord);
         } else {
-            lblWin.setText("Good luck next time!");
-            lblWord.setText("");
+            lblWin.setLblText("Good luck next time!");
+            lblWord.setLblText("");
         }
     }
 

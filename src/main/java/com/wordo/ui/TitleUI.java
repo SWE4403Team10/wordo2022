@@ -1,6 +1,9 @@
 package com.wordo.ui;
 
 import com.wordo.gamelogic.GameLogic;
+import com.wordo.ui.components.elements.WordoButton;
+import com.wordo.ui.components.elements.WordoLabel;
+import com.wordo.ui.components.elements.WordoRadioButton;
 import com.wordo.ui.layout.SharedMethods;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -17,6 +20,8 @@ public class TitleUI extends Application {
     private GridPane grid = new GridPane();
     private SharedMethods sharedmethods = new SharedMethods();
     private GameLogic gameLogic = GameLogic.getInstance();
+    private WordoButton playButton;
+    private WordoLabel titleLabel;
 
     @Override
     public void start(Stage stage) {
@@ -31,57 +36,40 @@ public class TitleUI extends Application {
         // Preset difficulty to easy
         gameLogic.setDifficulty("easy");
 
-        // Settings Button
-        Button btnSettings = new Button("Settings");
-        btnSettings.setStyle("-fx-background-color: transparent; -fx-background-size: 50px; -fx-background-repeat: no-repeat; -fx-border-color: transparent;");
-        btnSettings.setMinSize(75, 50);
-        btnSettings.setAlignment(Pos.TOP_LEFT);
-        btnSettings.setOnAction(e -> {
-            SettingsUI settings = new SettingsUI();
-            settings.start(titleStage);
-        });
-        HBox hboxSettings = new HBox(btnSettings);
-        hboxSettings.setMaxSize(100, 75);
-
-        grid.add(hboxSettings, 0, 0);
-
         // Title
-        Label lblTitle = new Label("Wordo");
-        lblTitle.setStyle(" -fx-font-size: 30px;");
+        titleLabel = new WordoLabel("Wordo");
+        titleLabel.getLabel().setStyle(" -fx-font-size: 30px;");
 
-        HBox hboxTitle = new HBox(lblTitle);
+        HBox hboxTitle = new HBox(titleLabel.getLabel());
         hboxTitle.setAlignment(Pos.CENTER);
 
         grid.add(hboxTitle, 2, 0, 3,1);
 
         // Play Button
-        Button btnPlay = new Button("Play");
-        btnPlay.setMinSize(100, 75);
-        btnPlay.setStyle("-fx-border: 2px; -fx-border-radius: 10px; -fx-font-size: 15px;");
-        btnPlay.setOnAction(e -> {
+        playButton = new WordoButton(100, 75, "Play", "-fx-border: 2px; -fx-border-radius: 10px; -fx-border-color: #000000; -fx-font-size: 15px;");
+        playButton.getButton().setOnAction(e -> {
             GameUI game = new GameUI();
             game.start(titleStage);
         });
 
-        HBox hboxPlay = new HBox(btnPlay);
+        HBox hboxPlay = new HBox(playButton.getButton());
         hboxPlay.setAlignment(Pos.CENTER);
 
         grid.add(hboxPlay , 2, 5, 3, 1);
 
         // Radio Button Difficulties
         final ToggleGroup tGroup = new ToggleGroup();
-        RadioButton rbEasy = new RadioButton("Easy");
-        rbEasy.setToggleGroup(tGroup);
-        rbEasy.setSelected(true);
-        rbEasy.setOnAction(e -> { gameLogic.setDifficulty("easy"); });
-        RadioButton rbMedium = new RadioButton("Medium");
-        rbMedium.setToggleGroup(tGroup);
-        rbMedium.setOnAction(e -> { gameLogic.setDifficulty("normal"); });
-        RadioButton rbHard = new RadioButton("Hard");
-        rbHard.setToggleGroup(tGroup);
-        rbHard.setOnAction(e -> { gameLogic.setDifficulty("hard"); });
+        WordoRadioButton rbHard = new WordoRadioButton(tGroup, "Hard");
+        rbHard.getRadioButton().setOnAction(e -> { gameLogic.setDifficulty("hard"); });
+        WordoRadioButton rbMedium = (WordoRadioButton) rbHard.clone();
+        rbMedium.setRbText("Medium");
+        rbMedium.getRadioButton().setOnAction(e -> { gameLogic.setDifficulty("normal"); });
+        WordoRadioButton rbEasy = (WordoRadioButton) rbHard.clone();
+        rbEasy.getRadioButton().setSelected(true);
+        rbEasy.setRbText("Easy");
+        rbEasy.getRadioButton().setOnAction(e -> { gameLogic.setDifficulty("easy"); });
 
-        HBox hboxDifficulties = new HBox(rbEasy, rbMedium, rbHard);
+        HBox hboxDifficulties = new HBox(rbEasy.getRadioButton(), rbMedium.getRadioButton(), rbHard.getRadioButton());
         hboxDifficulties.setAlignment(Pos.CENTER);
         hboxDifficulties.setSpacing(10);
 
