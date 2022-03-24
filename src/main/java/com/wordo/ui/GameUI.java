@@ -37,6 +37,8 @@ public class GameUI extends Application {
         gameStage = primaryStage;
         sharedMethods.createRowsColumnsForGridPane(grid, 9, 7);
 
+        gameLogic.setNumGuesses();
+
         diff = gameLogic.getDifficultyWordLength();
 
 //        grid.setGridLinesVisible(true);
@@ -72,6 +74,7 @@ public class GameUI extends Application {
         table.setGameUI(this);
 
         correctWord = gameLogic.generateCorrectWord();
+        gameLogic.setGameUI(this);
 
         //Keyboard
         grid.add(keyboard.getKeyboard(), 3, 7);
@@ -87,6 +90,7 @@ public class GameUI extends Application {
 
     }
 
+    // Get current keyboard
     public Keyboard getKeyboard(){
         return keyboard;
     }
@@ -95,7 +99,7 @@ public class GameUI extends Application {
      * Updates the Win label and the Word label to the correct text based on the result of the user.
      * @param show
      */
-    public void showWord(boolean show){
+    public void showWord(boolean show, boolean lastColumn){
         if(show){
             lblWin.setLblText("Winner!");
             lblWord.setLblText(correctWord);
@@ -103,11 +107,13 @@ public class GameUI extends Application {
             if(!gameLogic.getNumGuesses()){
                 lblWin.setLblText("Good luck next time!");
                 lblWord.setLblText(correctWord);
-            } else {
+            } else if(!gameLogic.verifyWord(table.getGuess()) && lastColumn){
                 lblWin.setLblText("Not a valid word!");
                 lblWord.setLblText("");
+            } else {
+                lblWin.setLblText("");
+                lblWord.setLblText("");
             }
-
         }
     }
 

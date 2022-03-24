@@ -16,6 +16,7 @@ public class KeyboardButton implements Element {
     // Constructor
     public KeyboardButton(char c){
         this.character = c;
+        this.state = -1;
         button = new Button(""+c);
         button.setAlignment(Pos.BOTTOM_CENTER);
         button.setPrefHeight(50);

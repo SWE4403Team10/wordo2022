@@ -30,7 +30,6 @@ public class Table {
     private int numOfColumns;
     private final ObservableList<Word> data = FXCollections.observableArrayList();
     private static String[] letters;
-    private int guessNumber = 0;
     private final List<Rectangle> tableCells = new ArrayList<Rectangle>();
     private final List<TextField> tableTF = new ArrayList<TextField>();
     private GameLogic gameLogic = GameLogic.getInstance();
@@ -98,7 +97,7 @@ public class Table {
      * Will return the guess as a string.
      * @return guess : String
      */
-    public static String getGuess() {
+    public String getGuess() {
         String guess = "";
         for (String s : letters) {
             guess += s;
@@ -156,26 +155,28 @@ public class Table {
                             public void handle(KeyEvent keyEvent) { // How it will handle the key press.
                                 if (lastColumn) {
                                     if (keyEvent.getCode() == KeyCode.ENTER) { // If the key pressed is ENTER.
-                                        if(gameLogic.verifyWord(getGuess())){
-                                            gameUI.showWord(false);
-                                        }
-                                        guessResult = gameLogic.checkGuess(getGuess());
-                                        for (int i = minIndex; i < tableCells.size() + minIndex; i++) {
-                                            if (maxIndex > i) { // Only allows the current row (guess) to be coloured.
-                                                changeColors(tableCells.get(i), guessResult[guessIndex]);
-                                                guessIndex++;
+                                        if(!gameLogic.verifyWord(getGuess())){
+                                            gameUI.showWord(false, lastColumn);
+                                        } else {
+                                            guessResult = gameLogic.checkGuess(getGuess());
+                                            for (int i = minIndex; i < tableCells.size() + minIndex; i++) {
+                                                if (maxIndex > i) { // Only allows the current row (guess) to be coloured.
+                                                    changeColors(tableCells.get(i), guessResult[guessIndex]);
+                                                    guessIndex++;
+                                                }
                                             }
+                                            if (gameLogic.isCorrect()) { // A check to see if the guess is correct.
+                                                gameUI.showWord(true, lastColumn);
+                                                tv.setDisable(true);
+                                            } else if (!gameLogic.getNumGuesses()) {
+                                                gameUI.showWord(false, lastColumn);
+                                                tv.setDisable(true);
+                                            }
+                                            guessIndex = 0;
+                                            minIndex = maxIndex;
+                                            maxIndex += gameLogic.getDifficultyWordLength();
+                                            Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
                                         }
-                                        if (gameLogic.isCorrect()) { // A check to see if the guess is correct.
-                                            gameUI.showWord(true);
-                                            tv.setDisable(true);
-                                        } else if (!gameLogic.getNumGuesses()) {
-                                            gameUI.showWord(false);
-                                        }
-                                        guessIndex = 0;
-                                        minIndex = maxIndex;
-                                        maxIndex += gameLogic.getDifficultyWordLength();
-                                        Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
                                     }
                                 }
                                 if (keyEvent.getCode() == KeyCode.BACK_SPACE) { // If the key pressed is BACK_SPACE.
@@ -191,6 +192,7 @@ public class Table {
                                     charInput.getTextField().setText(charInput.getTextField().getText().substring(0, 1));
                                 }
                             } else {
+                                gameUI.showWord(false, lastColumn);
                                 letters[columnIndex] = t;
                                 Platform.runLater(() -> robot.keyPress(KeyCode.TAB));
                             }
