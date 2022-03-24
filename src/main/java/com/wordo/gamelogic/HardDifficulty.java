@@ -2,12 +2,18 @@ package com.wordo.gamelogic;
 
 public class HardDifficulty implements Difficulty{
 
-    // Gets the rule for the length of appropriate words
+    /**
+     * Gets the required word length for HardDifficulty
+     * @return 6: int
+     */
     public int getWordLength(){
         return 6;
     }
 
-    // Gets the rule for the number of guesses
+    /**
+     * Gets the number of guesses allowed for HardDifficulty
+     * @return 6: int
+     */
     public int getNumGuesses(){
         return 6;
     }

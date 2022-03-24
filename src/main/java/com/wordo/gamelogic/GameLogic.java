@@ -22,17 +22,26 @@ public class GameLogic {
     private static final GameLogic instance = new GameLogic();
 
 
-    // GameLogic Constructor:
+    /**
+     * GameLogic Singleton constructor
+     */
     private GameLogic(){}
 
 
-    // Returns the instance of GameLogic
+    /**
+     * Method to grab the instance of GameLogic
+     * @return instance: GameLogic
+     */
     public static GameLogic getInstance(){
         return instance;
     }
 
 
-    // Compares the user guess with the correct word
+    /**
+     * This method compares a guess to the correct word and returns the result of the comparison
+     * @param guess
+     * @return result: int[]
+     */
     public int[] checkGuess(String guess){
         this.guess = guess;
         int[] result = new int[difficulty.getWordLength()];
@@ -41,18 +50,16 @@ public class GameLogic {
         char[] guessArray = guess.toCharArray();
         boolean found = false;
 
-        //check if guess meets word length difficulty requirements
         if(guess.length() == difficulty.getWordLength()){
-
-            for(int i = 0; i < difficulty.getWordLength(); i++){ //iterates through the correct word
-                for (int j = 0; j < difficulty.getWordLength(); j++) { //iterates through the guess
-                    if(toLowerCase(correctWordArray[i]) == toLowerCase(guessArray[j])){ // If a letter match is found
-                        if(i == j){ // If the letter is in the correct spot
+            for(int i = 0; i < difficulty.getWordLength(); i++){
+                for (int j = 0; j < difficulty.getWordLength(); j++) {
+                    if(toLowerCase(correctWordArray[i]) == toLowerCase(guessArray[j])){
+                        if(i == j){
                             guessArray[j] = '*';
-                            result[i] = 2; //updates result to show letter is correct, in the correct spot
+                            result[i] = 2;
                             break;
                         }
-                        else{ // Correct letter && wrong spot; check to see if there is duplicate letter in the guess and see if it would be in the correct spot
+                        else{
                             if(j+1<difficulty.getWordLength() && i>j){
                                 for(int k = j+1; k < difficulty.getWordLength(); k++){
                                     if(toLowerCase(correctWordArray[i]) == toLowerCase(guessArray[k]) && i == k){
@@ -66,18 +73,22 @@ public class GameLogic {
                                 result[j] = 1;
                                 break;
                             }
-
                         }
                     }
                 }
             }
-
         }
         numGuesses++;
         gameUI.getKeyboard().update(guess, result);
         return result;
     }
 
+
+    /**
+     * Method verifies a string is a valid word in the dictionary
+     * @param word
+     * @return ret: boolean
+     */
     public boolean verifyWord(String word){
         File fileToRead = new File("data/dictionary.txt");
         boolean ret = false;
@@ -99,7 +110,11 @@ public class GameLogic {
         }
     }
 
-    //Determines if a guess is correct or not
+
+    /**
+     * Method determines if a guess is correct
+     * @return
+     */
     public boolean isCorrect(){
         for(int i = 0; i < difficulty.getWordLength(); i++){
             if(result[i] != 2){
@@ -110,7 +125,10 @@ public class GameLogic {
     }
 
 
-    // Gets the current number of guesses
+    /**
+     * This method returns if there are still guesses to be made
+     * @return boolean
+     */
     public boolean getNumGuesses(){
         if(numGuesses == 6){
             return false;
@@ -118,16 +136,27 @@ public class GameLogic {
         return true;
     }
 
-    // Resets the current number of guesses
+
+    /**
+     * This method resets the number of guesses
+     */
     public void setNumGuesses(){
         numGuesses = 0;
     }
 
+
+    /**
+     * This method sets the GameUI for GameLogic
+     * @param gameUI
+     */
     public void setGameUI(GameUI gameUI){
         this.gameUI = gameUI;
     }
 
-    // Selects a random word from the data file to use as the correct word
+    /**
+     * Selects a random word from a text file depending on the current difficulty
+     * @return correctWord: String
+     */
     public String generateCorrectWord(){
         File file;
         String fileToRead;
@@ -155,7 +184,6 @@ public class GameLogic {
             reader.close();
             Random rand = new Random(System.currentTimeMillis());
             correctWord = words.get(rand.nextInt(words.size()));
-//            System.out.println(correctWord);
             return correctWord;
         } catch (Exception e) {
             System.out.println(e);
@@ -164,7 +192,11 @@ public class GameLogic {
     }
 
 
-    // Allows the difficulty to be changed
+    /**
+     * Allows to difficulty to be changed by inputting the correct String
+     * @param difficultyIn
+     * @return boolean
+     */
     public boolean setDifficulty(String difficultyIn){
         if(difficultyIn.equalsIgnoreCase("easy")){
             difficulty = new EasyDifficulty();
@@ -181,20 +213,30 @@ public class GameLogic {
         return true;
     }
 
+
+    /**
+     * Gets the word length depending on the current difficulty
+     * @return difficulty.getWordLength(): int
+     */
     public int getDifficultyWordLength() {
         return difficulty.getWordLength();
     }
 
-    // Get guess
+
+    /**
+     * Returns the stored guess
+     * @return guess: String
+     */
     public String getGuess(){
         return guess;
     }
 
 
-    //Get Result
+    /**
+     * Returns the stored result
+     * @return result: int[]
+     */
     public int[] getResult(){
         return result;
     }
-
-
 }

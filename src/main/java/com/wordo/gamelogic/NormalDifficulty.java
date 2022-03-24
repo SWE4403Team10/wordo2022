@@ -2,12 +2,18 @@ package com.wordo.gamelogic;
 
 public class NormalDifficulty implements Difficulty{
 
-    // Gets the rule for the length of appropriate words
+    /**
+     * Gets the required word length for NormalDifficulty
+     * @return 5: int
+     */
     public int getWordLength(){
         return 5;
     }
 
-    // Gets the rule for the number of guesses
+    /**
+     * Gets the number of guesses allowed for NormalDifficulty
+     * @return 6: int
+     */
     public int getNumGuesses(){
         return 6;
     }

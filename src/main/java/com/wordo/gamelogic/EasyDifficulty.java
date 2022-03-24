@@ -2,12 +2,18 @@ package com.wordo.gamelogic;
 
 public class EasyDifficulty implements Difficulty{
 
-    // Gets the rule for the length of appropriate words
+    /**
+     * Gets the required word length for EasyDifficulty
+     * @return 4: int
+     */
     public int getWordLength(){
         return 4;
     }
 
-    // Gets the rule for the number of guesses
+    /**
+     * Gets the number of guesses allowed for EasyDifficulty
+     * @return 6: int
+     */
     public int getNumGuesses(){
         return 6;
     }
