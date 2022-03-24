@@ -30,7 +30,6 @@ public class Table {
     private int numOfColumns;
     private final ObservableList<Word> data = FXCollections.observableArrayList();
     private static String[] letters;
-    private int guessNumber = 0;
     private final List<Rectangle> tableCells = new ArrayList<Rectangle>();
     private final List<TextField> tableTF = new ArrayList<TextField>();
     private GameLogic gameLogic = GameLogic.getInstance();

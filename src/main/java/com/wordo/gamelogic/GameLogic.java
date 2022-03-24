@@ -18,7 +18,7 @@ public class GameLogic {
     private String guess = "";
     public int[] result;
     private int numGuesses = 0;
-    private GameUI gameUI = new GameUI();
+    private GameUI gameUI;
     private static final GameLogic instance = new GameLogic();
 
 
@@ -47,7 +47,6 @@ public class GameLogic {
             for(int i = 0; i < difficulty.getWordLength(); i++){ //iterates through the correct word
                 for (int j = 0; j < difficulty.getWordLength(); j++) { //iterates through the guess
                     if(toLowerCase(correctWordArray[i]) == toLowerCase(guessArray[j])){ // If a letter match is found
-                        System.out.println("test: i = " + i + ", j = " + j);
                         if(i == j){ // If the letter is in the correct spot
                             guessArray[j] = '*';
                             result[i] = 2; //updates result to show letter is correct, in the correct spot
@@ -124,6 +123,10 @@ public class GameLogic {
         numGuesses = 0;
     }
 
+    public void setGameUI(GameUI gameUI){
+        this.gameUI = gameUI;
+    }
+
     // Selects a random word from the data file to use as the correct word
     public String generateCorrectWord(){
         File file;
@@ -152,7 +155,7 @@ public class GameLogic {
             reader.close();
             Random rand = new Random(System.currentTimeMillis());
             correctWord = words.get(rand.nextInt(words.size()));
-            System.out.println(correctWord);
+//            System.out.println(correctWord);
             return correctWord;
         } catch (Exception e) {
             System.out.println(e);

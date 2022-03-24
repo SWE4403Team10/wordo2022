@@ -74,6 +74,7 @@ public class GameUI extends Application {
         table.setGameUI(this);
 
         correctWord = gameLogic.generateCorrectWord();
+        gameLogic.setGameUI(this);
 
         //Keyboard
         grid.add(keyboard.getKeyboard(), 3, 7);
@@ -89,6 +90,7 @@ public class GameUI extends Application {
 
     }
 
+    // Get current keyboard
     public Keyboard getKeyboard(){
         return keyboard;
     }
