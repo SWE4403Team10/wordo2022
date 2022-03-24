@@ -87,7 +87,7 @@ public class GameLogic {
             String line = reader.readLine();
             List<String> words = new ArrayList<String>();
             while(line != null) {
-                if(line.contains(word)){
+                if(line.equalsIgnoreCase(word)){
                     ret = true;
                 }
                 line = reader.readLine();
@@ -114,12 +114,15 @@ public class GameLogic {
     // Gets the current number of guesses
     public boolean getNumGuesses(){
         if(numGuesses == 6){
-            numGuesses = 0;
             return false;
         }
         return true;
     }
 
+    // Resets the current number of guesses
+    public void setNumGuesses(){
+        numGuesses = 0;
+    }
 
     // Selects a random word from the data file to use as the correct word
     public String generateCorrectWord(){
